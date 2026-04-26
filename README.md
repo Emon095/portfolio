@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Emon095 Portfolio
 
-# Run and deploy your AI Studio app
+Personal portfolio for **SM Shahrier Emon** focused on cybersecurity research, CTF work, and hands-on security tooling.
 
-This contains everything you need to run your app locally.
+## Project Sites Summary
 
-View your app in AI Studio: https://ai.studio/apps/5dfa50c3-0f0f-45fb-87ec-9557bfd752db
+### 1. HideSeek JS
+- **Focus:** Steganography + cryptography in the browser
+- **What it does:** LSB-based image steganography tool built with TypeScript for hiding and extracting payloads client-side.
+- **Stack:** TypeScript, browser image processing
+
+### 2. CTF Writeups Archive
+- **Focus:** CTF learning and practical exploitation workflows
+- **What it does:** Structured walkthrough collection for Hack The Box and TryHackMe challenges, with emphasis on Linux privilege escalation.
+- **Stack:** Security research, documentation
+
+### 3. BufferOverflow Lab
+- **Focus:** Binary exploitation training
+- **What it does:** Educational vulnerable binaries and exploit scripts for learning buffer overflow and pwn fundamentals.
+- **Stack:** C++, exploit scripting
+
+## Profile Snapshot
+- Cybersecurity Researcher & CTF Player
+- Specialties: Steganography, Cryptography, Binary Exploitation
+- Location: Dhaka, Bangladesh
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Install dependencies: `npm install`
+2. Start dev server: `npm run dev`
+3. Build production bundle: `npm run build`
