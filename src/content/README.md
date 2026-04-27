@@ -1,19 +1,22 @@
-# Portfolio Content Files (Obsidian-Friendly)
+# Portfolio Content (Obsidian-Friendly)
 
-Edit these files to update each section of the site:
+Each section now loads **all markdown files** from its folder.
 
-- `home.md` -> Homepage identity fields (name, role, location, image, current building)
-- `about.md` -> About section (`BIO`) and stack (`TECH_STACK`)
-- `writeups.md` -> Writeups section
-- `education.md` -> Education section
-- `certifications.md` -> Certifications section
-- `projects.md` -> Projects section
-- `vault.md` -> Vault/media section
+## Folders
 
-Format notes:
+- `home/` -> homepage identity fields (`NAME`, `ROLE`, `LOCATION`, `CURRENT_BUILDING`, `IMAGE`)
+- `about/` -> about section fields (`BIO`, `TECH_STACK`)
+- `writeups/` -> one writeup per file
+- `education/` -> one education record per file
+- `certifications/` -> one certification record per file
+- `achievements/` -> optional extra achievement records (merged with certifications)
+- `projects/` -> one project per file
+- `vault/` -> one vault/media item per file
 
-- Single-record files use `KEY: value`
-- Multi-record files use list items: `- KEY: value`
-- Separate records with `---`
+## File Format
 
-These files are parsed directly by `src/data.ts` during build/runtime.
+- Preferred format for every file: `KEY: value` (one field per line)
+- Supported for compatibility: `- KEY: value`
+- Filename can be anything; sorting is alphabetical, so prefixes like `001-`, `002-` control order.
+
+Parsed by `src/data.ts` at build/runtime.

@@ -1,9 +1,0 @@
-- TITLE: Breaking LSB Steganography
-- DATE: 2024-02-15
-- CATEGORY: Research
-- DESC: A deep dive into statistical analysis of pixel variations to detect hidden payloads.
----
-- TITLE: OWASP Top 10 for 2024
-- DATE: 2024-01-10
-- CATEGORY: Blog
-- DESC: Summarizing the shift in web vulnerabilities and how to mitigate Injection and Broken Access Control.

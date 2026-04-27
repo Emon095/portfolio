@@ -1,11 +1,3 @@
-import aboutRaw from './content/about.md?raw';
-import certificationsRaw from './content/certifications.md?raw';
-import educationRaw from './content/education.md?raw';
-import homeRaw from './content/home.md?raw';
-import projectsRaw from './content/projects.md?raw';
-import vaultRaw from './content/vault.md?raw';
-import writeupsRaw from './content/writeups.md?raw';
-
 export interface Project {
   id: string;
   title: string;
@@ -40,6 +32,11 @@ const toId = (value: string, fallback: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
+const getSortedRawContents = (files: Record<string, string>): string[] =>
+  Object.entries(files)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, content]) => content);
+
 const parseKeyValueDocument = (raw: string): MarkdownRecord => {
   const result: MarkdownRecord = {};
   raw
@@ -47,43 +44,43 @@ const parseKeyValueDocument = (raw: string): MarkdownRecord => {
     .map((line) => line.trim())
     .filter((line) => line && !line.startsWith('#'))
     .forEach((line) => {
-      const idx = line.indexOf(':');
+      const normalized = line.startsWith('- ') ? line.slice(2).trim() : line;
+      const idx = normalized.indexOf(':');
       if (idx === -1) return;
-      const key = line.slice(0, idx).trim().toLowerCase();
-      const value = line.slice(idx + 1).trim();
+      const key = normalized.slice(0, idx).trim().toLowerCase();
+      const value = normalized.slice(idx + 1).trim();
       if (key) result[key] = value;
     });
   return result;
 };
 
-const parseListDocument = (raw: string): MarkdownRecord[] =>
-  raw
-    .split('\n---')
-    .map((block) =>
-      block
-        .split('\n')
-        .map((line) => line.trim())
-        .filter(Boolean)
-        .reduce<MarkdownRecord>((acc, line) => {
-          if (!line.startsWith('- ')) return acc;
-          const stripped = line.slice(2);
-          const idx = stripped.indexOf(':');
-          if (idx === -1) return acc;
-          const key = stripped.slice(0, idx).trim().toLowerCase();
-          const value = stripped.slice(idx + 1).trim();
-          if (key) acc[key] = value;
-          return acc;
-        }, {}),
-    )
+const parseCollection = (files: Record<string, string>): MarkdownRecord[] =>
+  getSortedRawContents(files)
+    .map((raw) => parseKeyValueDocument(raw))
     .filter((item) => Object.keys(item).length > 0);
 
-const home = parseKeyValueDocument(homeRaw);
-const about = parseKeyValueDocument(aboutRaw);
-const certifications = parseListDocument(certificationsRaw);
-const projects = parseListDocument(projectsRaw);
-const writeups = parseListDocument(writeupsRaw);
-const education = parseListDocument(educationRaw);
-const vault = parseListDocument(vaultRaw);
+const mergeKeyValueCollection = (files: Record<string, string>): MarkdownRecord =>
+  parseCollection(files).reduce<MarkdownRecord>((acc, item) => ({...acc, ...item}), {});
+
+const homeFiles = import.meta.glob('./content/home/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const aboutFiles = import.meta.glob('./content/about/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const certificationFiles = import.meta.glob('./content/certifications/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const achievementFiles = import.meta.glob('./content/achievements/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const projectFiles = import.meta.glob('./content/projects/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const writeupFiles = import.meta.glob('./content/writeups/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const educationFiles = import.meta.glob('./content/education/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const vaultFiles = import.meta.glob('./content/vault/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+
+const home = mergeKeyValueCollection(homeFiles);
+const about = mergeKeyValueCollection(aboutFiles);
+const certifications = [
+  ...parseCollection(certificationFiles),
+  ...parseCollection(achievementFiles),
+];
+const projects = parseCollection(projectFiles);
+const writeups = parseCollection(writeupFiles);
+const education = parseCollection(educationFiles);
+const vault = parseCollection(vaultFiles);
 
 export const USER_INFO = {
   name: home.name || 'SM Shahrier Emon',

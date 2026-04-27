@@ -1,0 +1,5 @@
+TITLE: Mr. Robot
+TYPE: Series
+STATUS: Completed
+RATING: 10
+DATE: 2024-01

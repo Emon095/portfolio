@@ -1,4 +1,0 @@
-- INSTITUTION: Daffodil International University
-- DEGREE: B.Sc. in Computer Science and Engineering
-- DURATION: 2020 - 2024
-- DETAILS: Focused on Software Engineering, Cryptography, and Network Security. Active member of the Cyber Security Club.
