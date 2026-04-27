@@ -16,7 +16,7 @@ import {
   ChevronRight,
   Monitor
 } from 'lucide-react';
-import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS } from './data';
+import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, TECH_STACK_MARKDOWN, EDUCATION, WRITEUPS } from './data';
 
 // --- Shared Components ---
 const safeText = (value: unknown, fallback = ''): string => {
@@ -155,13 +155,19 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               <div className="space-y-12 md:mr-6 lg:mr-10 text-left md:text-right">
                 <div>
                   <div className="column-title md:justify-end">Tech_Stack</div>
-                  <div className="flex flex-wrap gap-2 md:justify-end">
-                    {TECH_STACK.map((tech) => (
-                      <span key={tech} className="inline-block px-3 py-1 border border-mono-border rounded-full text-[10px] text-mono-accent hover:border-white transition-colors">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  {TECH_STACK_MARKDOWN ? (
+                    <div className="text-sm text-mono-muted leading-relaxed prose prose-invert max-w-none md:text-right">
+                      <Markdown>{TECH_STACK_MARKDOWN}</Markdown>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap gap-2 md:justify-end">
+                      {TECH_STACK.map((tech) => (
+                        <span key={tech} className="inline-block px-3 py-1 border border-mono-border rounded-full text-[10px] text-mono-accent hover:border-white transition-colors">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div>
                    <div className="column-title md:justify-end">Current_Node</div>
