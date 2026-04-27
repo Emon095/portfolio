@@ -302,7 +302,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen pb-24 px-6 md:px-12 lg:px-24 pt-12 max-w-7xl mx-auto flex flex-col"
+      className="min-h-screen w-full pb-24 px-4 md:px-8 lg:px-12 xl:px-16 pt-12 flex flex-col"
     >
       {/* Header Section */}
       <header className="flex flex-col md:flex-row justify-between items-center border-b border-mono-border pb-8 mb-8 gap-8">
