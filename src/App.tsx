@@ -34,6 +34,8 @@ type DetailEntry = {
   title: string;
   meta?: string;
   content: string;
+  heroImage?: string;
+  section: 'writeups' | 'achievements' | 'media';
 };
 
 const Scanlines = () => <div className="scanlines" />;
@@ -196,7 +198,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               {ACHIEVEMENTS.map((ach) => (
                 <div
                   key={ach.id}
-                  onClick={() => onOpenEntry({ title: ach.title, meta: `${formatDate(ach.date)} · ${ach.issuer}`, content: safeText(ach.content, ach.description) })}
+                  onClick={() => onOpenEntry({
+                    title: ach.title,
+                    meta: `${formatDate(ach.date)} · ${ach.issuer}`,
+                    content: safeText(ach.content, ach.description),
+                    heroImage: ach.heroImage,
+                    section: 'achievements',
+                  })}
                   className="terminal-card group flex flex-col justify-between cursor-pointer"
                 >
                   <div>
@@ -278,7 +286,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               {WRITEUPS.map((w) => (
                 <div
                   key={w.id}
-                  onClick={() => onOpenEntry({ title: w.title, meta: `${w.category} · ${w.date}`, content: safeText(w.content, w.excerpt) })}
+                  onClick={() => onOpenEntry({
+                    title: w.title,
+                    meta: `${w.category} · ${w.date}`,
+                    content: safeText(w.content, w.excerpt),
+                    heroImage: w.heroImage,
+                    section: 'writeups',
+                  })}
                   className="terminal-card group cursor-pointer hover:bg-mono-surface border-mono-border/50"
                 >
                   {w.heroImage ? (
@@ -360,7 +374,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               {MEDIA.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => onOpenEntry({ title: item.title, meta: `${item.type} · ${item.date}`, content: safeText(item.content, item.description) })}
+                  onClick={() => onOpenEntry({
+                    title: item.title,
+                    meta: `${item.type} · ${item.date}`,
+                    content: safeText(item.content, item.description),
+                    heroImage: item.heroImage,
+                    section: 'media',
+                  })}
                   className="terminal-card relative aspect-video overflow-hidden group flex flex-col justify-end p-6 border-mono-border/50 cursor-pointer"
                 >
                   {item.heroImage ? (
@@ -450,6 +470,40 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
           <a href="#" className="hover:text-white transition-colors"><Mail size={12} /></a>
         </div>
       </footer>
+    </motion.div>
+  );
+};
+
+const EntryPage = ({ entry, onBack }: { entry: DetailEntry; onBack: () => void }) => {
+  const sectionName = entry.section === 'writeups' ? 'Writeups' : entry.section === 'achievements' ? 'Achievements' : 'Media';
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      className="min-h-screen w-full pb-24 px-4 md:px-8 lg:px-12 xl:px-16 pt-12"
+    >
+      <div className="max-w-5xl mx-auto">
+        <button
+          onClick={onBack}
+          className="text-xs font-mono uppercase tracking-[2px] text-mono-muted hover:text-white transition-colors mb-8 cursor-pointer"
+        >
+          [Back_To_{sectionName}]
+        </button>
+        <div className="border-b border-mono-border pb-6 mb-8">
+          <h1 className="text-4xl md:text-5xl font-display text-white leading-tight">{entry.title}</h1>
+          {entry.meta ? <p className="mt-3 text-xs uppercase tracking-[2px] text-mono-muted">{entry.meta}</p> : null}
+        </div>
+        {entry.heroImage ? (
+          <div className="mb-8 border border-mono-border/50 overflow-hidden">
+            <img src={entry.heroImage} alt={entry.title} className="w-full max-h-[460px] object-cover" />
+          </div>
+        ) : null}
+        <article className="terminal-card prose prose-invert max-w-none text-mono-muted">
+          <Markdown>{safeText(entry.content)}</Markdown>
+        </article>
+      </div>
     </motion.div>
   );
 };
@@ -596,13 +650,17 @@ const App: React.FC = () => {
       
       <AnimatePresence mode="wait">
         {mode === 'editorial' ? (
-          <EditorialView 
-            key="editorial" 
-            onContact={() => setShowContact(true)} 
-            onOpenEntry={setSelectedEntry}
-            activeSection={activeSection} 
-            setActiveSection={setActiveSection} 
-          />
+          selectedEntry ? (
+            <EntryPage key={`entry-${selectedEntry.section}-${selectedEntry.title}`} entry={selectedEntry} onBack={() => setSelectedEntry(null)} />
+          ) : (
+            <EditorialView 
+              key="editorial" 
+              onContact={() => setShowContact(true)} 
+              onOpenEntry={setSelectedEntry}
+              activeSection={activeSection} 
+              setActiveSection={setActiveSection} 
+            />
+          )
         ) : (
           <TerminalView key="terminal" />
         )}
@@ -610,32 +668,6 @@ const App: React.FC = () => {
 
       {/* Contact Modal */}
       <AnimatePresence>
-        {selectedEntry && (
-          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 backdrop-blur-xl bg-mono-bg/70">
-            <motion.div
-              initial={{ scale: 0.96, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.96, opacity: 0 }}
-              className="terminal-card w-full max-w-4xl max-h-[88vh] overflow-y-auto relative"
-            >
-              <button
-                onClick={() => setSelectedEntry(null)}
-                className="absolute top-4 right-4 text-mono-muted hover:text-mono-accent cursor-pointer"
-              >
-                [X]_CLOSE
-              </button>
-              <div className="pr-20">
-                <h2 className="text-3xl font-display text-white mb-2">{selectedEntry.title}</h2>
-                {selectedEntry.meta ? (
-                  <div className="text-[11px] font-mono uppercase tracking-[2px] text-mono-muted mb-8">{selectedEntry.meta}</div>
-                ) : null}
-              </div>
-              <div className="text-sm text-mono-muted leading-relaxed prose prose-invert max-w-none">
-                <Markdown>{safeText(selectedEntry.content)}</Markdown>
-              </div>
-            </motion.div>
-          </div>
-        )}
         {showContact && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-mono-bg/60">
             <motion.div 
