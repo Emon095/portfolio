@@ -254,11 +254,15 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                         >
                           <div>
                             {ach.heroImage ? (
-                              <div className="mb-5 overflow-hidden border border-mono-border/50">
+                              <div data-img-wrap className="mb-5 overflow-hidden border border-mono-border/50">
                                 <img
                                   src={ach.heroImage}
                                   alt={ach.title}
                                   className="w-full h-28 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                                  onError={(event) => {
+                                    const wrapper = event.currentTarget.parentElement;
+                                    if (wrapper) wrapper.style.display = 'none';
+                                  }}
                                 />
                               </div>
                             ) : null}
