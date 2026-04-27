@@ -6,6 +6,8 @@ import {
   Layout as LayoutIcon, 
   Github, 
   Twitter, 
+  Instagram,
+  Linkedin,
   Mail, 
   ExternalLink, 
   Search, 
@@ -14,9 +16,10 @@ import {
   Cpu, 
   Trophy,
   ChevronRight,
-  Monitor
+  Monitor,
+  Moon
 } from 'lucide-react';
-import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS } from './data';
+import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS, EXPERIENCE } from './data';
 
 // --- Shared Components ---
 const safeText = (value: unknown, fallback = ''): string => {
@@ -35,13 +38,13 @@ type DetailEntry = {
   meta?: string;
   content: string;
   heroImage?: string;
-  section: 'writeups' | 'achievements' | 'media';
+  section: 'writeups' | 'achievements' | 'experience' | 'media';
 };
 
 const Scanlines = () => <div className="scanlines" />;
 
 const ModeToggle = ({ mode, setMode }: { mode: 'editorial' | 'terminal', setMode: (m: 'editorial' | 'terminal') => void }) => (
-  <div className="fixed top-3 md:top-12 left-60 md:left-60 z-[60] flex items-center gap-2 bg-mono-surface/80 backdrop-blur-md border border-mono-border p-1 rounded-full">
+  <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[60] flex items-center gap-2 bg-mono-surface/80 backdrop-blur-md border border-mono-border p-1 rounded-full">
     <button 
       onClick={() => setMode('editorial')}
       className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'editorial' ? 'bg-mono-accent text-mono-bg' : 'text-mono-muted hover:text-white'}`}
@@ -253,6 +256,97 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             </div>
           </motion.div>
         );
+      case 'experience':
+        return (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="py-12 md:py-16"
+          >
+            <div className="text-center border-y border-mono-border py-10 md:py-12">
+              <h2 className="text-5xl md:text-6xl font-display italic text-white">Experience</h2>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[4px] text-mono-muted">
+                Professional_Journey // Page_1
+              </p>
+            </div>
+            {EXPERIENCE.length === 0 ? (
+              <div className="terminal-card mt-8 text-sm text-mono-muted">
+                No experience entries found. Add markdown files in <code>src/content/experience</code> to populate this section.
+              </div>
+            ) : (
+              <div className="relative mt-14 max-w-6xl mx-auto">
+                <div className="absolute left-4 md:left-8 top-0 bottom-0 w-px bg-mono-border/60" />
+                {EXPERIENCE.map((exp) => (
+                  <div key={exp.id} className="relative pl-14 md:pl-24 py-8 md:py-10 border-b border-mono-border/30 last:border-b-0">
+                    <span className="absolute left-[9px] md:left-[25px] top-12 w-3 h-3 rounded-full border border-mono-accent/80 bg-mono-bg" />
+                    <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-start">
+                      <div
+                        onClick={() => onOpenEntry({
+                          title: exp.title,
+                          meta: `${formatDate(exp.date)}${exp.organization ? ` · ${exp.organization}` : ''}`,
+                          content: safeText(exp.content, exp.description),
+                          heroImage: exp.heroImage,
+                          section: 'experience',
+                        })}
+                        className="group cursor-pointer"
+                      >
+                        <h3 className="text-4xl md:text-5xl font-display leading-tight text-white group-hover:text-mono-accent transition-colors">
+                          {exp.title}
+                          {exp.organization ? ` @ ${exp.organization}` : ''}
+                        </h3>
+                        {exp.link ? (
+                          <a
+                            href={exp.link}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(event) => event.stopPropagation()}
+                            className="inline-flex items-center gap-2 mt-3 font-mono text-base md:text-xl text-mono-accent hover:text-white transition-colors break-all"
+                          >
+                            @ {exp.link}
+                            <ExternalLink size={16} />
+                          </a>
+                        ) : null}
+                        <div className="mt-5 flex flex-wrap gap-2">
+                          {exp.type ? (
+                            <span className="px-3 py-1 border border-mono-accent/40 bg-mono-accent/5 font-mono text-[10px] uppercase tracking-[2px] text-mono-accent">
+                              {exp.type}
+                            </span>
+                          ) : null}
+                          {exp.mode ? (
+                            <span className="px-3 py-1 border border-mono-border font-mono text-[10px] uppercase tracking-[2px] text-mono-muted">
+                              {exp.mode}
+                            </span>
+                          ) : null}
+                          {exp.tags.map((tag) => (
+                            <span key={tag} className="px-3 py-1 border border-mono-border/70 font-mono text-[10px] uppercase tracking-[2px] text-mono-muted">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="mt-6 text-base text-mono-muted leading-relaxed max-w-3xl">
+                          <Markdown>{safeText(exp.description)}</Markdown>
+                        </div>
+                        <button className="mt-6 text-[11px] font-mono uppercase tracking-[3px] text-mono-muted hover:text-white transition-colors">
+                          View_Details →
+                        </button>
+                      </div>
+                      <div className="md:text-right">
+                        <div className="font-mono text-xs uppercase tracking-[3px] text-mono-muted whitespace-nowrap">
+                          {formatDate(exp.date)}
+                        </div>
+                        {exp.mode ? (
+                          <div className="mt-2 font-mono text-[10px] uppercase tracking-[2px] text-mono-muted">
+                            {exp.mode}
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        );
       case 'certifications':
         return (
           <motion.div
@@ -451,6 +545,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             { id: 'writeups', label: 'Writeups' },
             { id: 'education', label: 'Education' },
             { id: 'achievements', label: 'Achievements' },
+            { id: 'experience', label: 'Experience' },
             { id: 'certifications', label: 'Certifications' },
             { id: 'projects', label: 'Projects' },
             { id: 'media', label: 'Media' },
@@ -493,7 +588,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
 };
 
 const EntryPage = ({ entry, onBack }: { entry: DetailEntry; onBack: () => void }) => {
-  const sectionName = entry.section === 'writeups' ? 'Writeups' : entry.section === 'achievements' ? 'Achievements' : 'Media';
+  const sectionName = entry.section === 'writeups'
+    ? 'Writeups'
+    : entry.section === 'achievements'
+      ? 'Achievements'
+      : entry.section === 'experience'
+        ? 'Experience'
+        : 'Media';
 
   return (
     <motion.div
@@ -578,10 +679,13 @@ const TerminalView = () => {
         response.push(USER_INFO.bio, `Base: ${USER_INFO.location}`, `Active_Task: ${USER_INFO.currentlyBuilding}`);
         break;
       case 'ls':
-        response.push('achievements.log  certifications.log  education.db  projects.list  media.archive  writeups.txt');
+        response.push('achievements.log  experience.log  certifications.log  education.db  projects.list  media.archive  writeups.txt');
         break;
       case 'cat achievements.log':
         ACHIEVEMENTS.forEach(a => response.push(`[${a.date}] ${a.title} - ${a.issuer}`));
+        break;
+      case 'cat experience.log':
+        EXPERIENCE.forEach(e => response.push(`[${e.date}] ${e.title}${e.organization ? ` - ${e.organization}` : ''}`));
         break;
       case 'cat certifications.log':
         CERTIFICATIONS.forEach(c => response.push(`[${c.date}] ${c.title} - ${c.issuer}`));

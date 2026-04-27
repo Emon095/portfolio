@@ -19,6 +19,20 @@ export interface Achievement {
   heroImage?: string;
 }
 
+export interface Experience {
+  id: string;
+  title: string;
+  organization: string;
+  date: string;
+  description: string;
+  content: string;
+  link?: string;
+  type?: string;
+  mode?: string;
+  tags: string[];
+  heroImage?: string;
+}
+
 export interface Certification {
   id: string;
   title: string;
@@ -195,6 +209,7 @@ const homeFiles = import.meta.glob('./content/home/*.md', {eager: true, query: '
 const aboutFiles = import.meta.glob('./content/about/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const certificationFiles = import.meta.glob('./content/certifications/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const achievementFiles = import.meta.glob('./content/achievements/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const experienceFiles = import.meta.glob('./content/experience/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const projectFiles = import.meta.glob('./content/projects/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const writeupFiles = import.meta.glob('./content/writeups/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const educationFiles = import.meta.glob('./content/education/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
@@ -209,6 +224,7 @@ const aboutBioContent = aboutDocs
   .join('\n\n');
 const certifications = parseCollection(certificationFiles);
 const achievements = parseCollection(achievementFiles);
+const experiences = parseCollection(experienceFiles);
 const projects = parseCollection(projectFiles);
 const writeups = parseCollection(writeupFiles);
 const education = parseCollection(educationFiles);
@@ -270,6 +286,26 @@ export const ACHIEVEMENTS: Achievement[] = achievements.map((doc, index) => {
     date: item.date || '',
     description: item.desc || '',
     content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    heroImage: resolveContentAssetPath(item.hero_image || item.image),
+  };
+});
+
+export const EXPERIENCE: Experience[] = experiences.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.title || '', `experience-${index + 1}`),
+    title: item.title || 'Untitled Experience',
+    organization: item.organization || item.company || '',
+    date: item.date || '',
+    description: item.desc || '',
+    content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    link: item.link || undefined,
+    type: item.type || undefined,
+    mode: item.mode || item.location || undefined,
+    tags: (item.tags || '')
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean),
     heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
