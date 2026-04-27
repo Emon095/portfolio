@@ -609,7 +609,7 @@ const TerminalView = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 1.05 }}
-      className="fixed inset-0 z-40 bg-mono-bg p-4 md:p-8 font-mono text-mono-accent overflow-hidden flex flex-col pt-24"
+      className="fixed inset-0 z-40 bg-mono-bg p-4 md:p-8 font-mono text-mono-accent overflow-hidden flex flex-col pt-32 md:pt-36"
     >
       <div className="flex-1 overflow-y-auto space-y-1 mb-4 scrollbar-hide custom-scrollbar">
         {history.map((line, i) => (
