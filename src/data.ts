@@ -81,8 +81,22 @@ const normalizeAssetUrl = (value: string): string => {
 
 const resolveContentAssetPath = (value?: string): string | undefined => {
   if (!value) return undefined;
-  const trimmed = value.trim();
+  let trimmed = value.trim();
   if (!trimmed) return undefined;
+
+  // Allow Obsidian embed syntax in metadata fields: ![[file.png]] or ![[path/file.png|caption]]
+  const obsidianEmbed = trimmed.match(/^!\[\[([^\]]+)\]\]$/);
+  if (obsidianEmbed) {
+    const [target] = obsidianEmbed[1].split('|');
+    trimmed = target.trim();
+  }
+
+  // Allow standard markdown image syntax in metadata fields: ![](path)
+  const markdownImage = trimmed.match(/^!\[[^\]]*]\(([^)]+)\)$/);
+  if (markdownImage) {
+    trimmed = markdownImage[1].trim().replace(/^["']|["']$/g, '');
+  }
+
   if (
     trimmed.startsWith('http://') ||
     trimmed.startsWith('https://') ||
