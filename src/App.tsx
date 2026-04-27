@@ -205,6 +205,33 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
           </motion.div>
         );
       case 'achievements':
+        {
+          const groupedAchievements: Array<{
+            category: 'International' | 'National' | 'Inter University';
+            heroTitle: string;
+            heroSubtitle: string;
+            items: typeof ACHIEVEMENTS;
+          }> = [
+            {
+              category: 'International',
+              heroTitle: 'International Highlights',
+              heroSubtitle: 'Global CTF rankings and placements',
+              items: ACHIEVEMENTS.filter((item) => item.category === 'International'),
+            },
+            {
+              category: 'National',
+              heroTitle: 'National Highlights',
+              heroSubtitle: 'Top placements across national events',
+              items: ACHIEVEMENTS.filter((item) => item.category === 'National'),
+            },
+            {
+              category: 'Inter University',
+              heroTitle: 'Inter University Highlights',
+              heroSubtitle: 'University-level CTF accomplishments',
+              items: ACHIEVEMENTS.filter((item) => item.category === 'Inter University'),
+            },
+          ].filter((group) => group.items.length > 0);
+
         return (
           <motion.div 
             initial={{ opacity: 0 }}
@@ -212,47 +239,78 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             className="py-12"
           >
             <div className="column-title">Achievements_Record</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
-              {ACHIEVEMENTS.map((ach) => (
-                <div
-                  key={ach.id}
-                  onClick={() => onOpenEntry({
-                    title: ach.title,
-                    meta: `${formatDate(ach.date)} · ${ach.issuer}`,
-                    content: safeText(ach.content, ach.description),
-                    heroImage: ach.heroImage,
-                    section: 'achievements',
-                  })}
-                  className="terminal-card group flex flex-col justify-between cursor-pointer"
-                >
-                  <div>
-                    {ach.heroImage ? (
-                      <div className="mb-5 overflow-hidden border border-mono-border/50">
-                        <img
-                          src={ach.heroImage}
-                          alt={ach.title}
-                          className="w-full h-44 object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                        />
-                      </div>
-                    ) : null}
-                    <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{formatDate(ach.date)}</div>
-                    <h4 className="text-2xl font-display text-white group-hover:text-mono-accent transition-colors leading-snug mb-4">{ach.title}</h4>
-                    <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {ach.issuer}</div>
-                    <div className="text-sm text-mono-muted/80 leading-relaxed italic border-l border-mono-border pl-4">
-                      <Markdown>{safeText(ach.description)}</Markdown>
+            <div className="space-y-14 mt-8">
+              {groupedAchievements.map((group) => {
+                const categoryHeroImage = group.items.find((entry) => entry.heroImage)?.heroImage;
+                return (
+                  <section key={group.category} className="space-y-8">
+                    <div className="flex items-center gap-4">
+                      <h3 className="text-xl md:text-2xl font-display italic text-white">{group.category}</h3>
+                      <div className="h-px flex-1 bg-mono-border" />
                     </div>
-                  </div>
-                  <div className="mt-8 pt-6 border-t border-mono-border/30 flex justify-between items-center">
-                    <button className="text-[11px] font-mono text-mono-muted hover:text-white transition-all underline underline-offset-4 uppercase tracking-widest">
-                      Verify_Record
-                    </button>
-                    <ShieldCheck size={16} className="text-mono-border group-hover:text-mono-accent transition-colors" />
-                  </div>
-                </div>
-              ))}
+                    <div className="terminal-card p-0 overflow-hidden">
+                      {categoryHeroImage ? (
+                        <div className="relative h-48 md:h-56">
+                          <img src={categoryHeroImage} alt={`${group.category} hero`} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-black/65 to-black/20" />
+                          <div className="absolute left-6 bottom-6">
+                            <div className="text-2xl md:text-3xl font-display text-white">{group.heroTitle}</div>
+                            <div className="font-mono text-xs uppercase tracking-[2px] text-white/80 mt-1">{group.heroSubtitle}</div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="h-40 md:h-48 bg-gradient-to-r from-mono-surface to-mono-bg flex flex-col justify-center px-6">
+                          <div className="text-2xl md:text-3xl font-display text-white">{group.heroTitle}</div>
+                          <div className="font-mono text-xs uppercase tracking-[2px] text-mono-muted mt-1">{group.heroSubtitle}</div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      {group.items.map((ach) => (
+                        <div
+                          key={ach.id}
+                          onClick={() => onOpenEntry({
+                            title: ach.title,
+                            meta: `${formatDate(ach.date)} · ${ach.issuer}`,
+                            content: safeText(ach.content, ach.description),
+                            heroImage: ach.heroImage,
+                            section: 'achievements',
+                          })}
+                          className="terminal-card group flex flex-col justify-between cursor-pointer"
+                        >
+                          <div>
+                            {ach.heroImage ? (
+                              <div className="mb-5 overflow-hidden border border-mono-border/50">
+                                <img
+                                  src={ach.heroImage}
+                                  alt={ach.title}
+                                  className="w-full h-44 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                                />
+                              </div>
+                            ) : null}
+                            <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{formatDate(ach.date)}</div>
+                            <h4 className="text-2xl font-display text-white group-hover:text-mono-accent transition-colors leading-snug mb-4">{ach.title}</h4>
+                            <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {ach.issuer}</div>
+                            <div className="text-sm text-mono-muted/80 leading-relaxed italic border-l border-mono-border pl-4">
+                              <Markdown>{safeText(ach.description)}</Markdown>
+                            </div>
+                          </div>
+                          <div className="mt-8 pt-6 border-t border-mono-border/30 flex justify-between items-center">
+                            <button className="text-[11px] font-mono text-mono-muted hover:text-white transition-all underline underline-offset-4 uppercase tracking-widest">
+                              Verify_Record
+                            </button>
+                            <ShieldCheck size={16} className="text-mono-border group-hover:text-mono-accent transition-colors" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
             </div>
           </motion.div>
         );
+        }
       case 'experience':
         return (
           <motion.div

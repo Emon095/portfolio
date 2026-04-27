@@ -13,6 +13,7 @@ export interface Achievement {
   id: string;
   title: string;
   issuer: string;
+  category: 'International' | 'National' | 'Inter University';
   date: string;
   description: string;
   content: string;
@@ -279,10 +280,18 @@ export const CERTIFICATIONS: Certification[] = certifications.map((doc, index) =
 
 export const ACHIEVEMENTS: Achievement[] = achievements.map((doc, index) => {
   const item = doc.fields;
+  const rawCategory = (item.category || '').trim().toLowerCase();
+  const category: Achievement['category'] =
+    rawCategory === 'national'
+      ? 'National'
+      : rawCategory === 'inter university' || rawCategory === 'inter-university'
+        ? 'Inter University'
+        : 'International';
   return {
     id: toId(item.title || '', `achievement-${index + 1}`),
     title: item.title || 'Untitled Achievement',
     issuer: item.issuer || '',
+    category,
     date: item.date || '',
     description: item.desc || '',
     content: normalizeMarkdownBody(doc.content || item.desc || ''),
