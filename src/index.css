@@ -140,6 +140,44 @@
   .btn-force-white {
     color: #ffffff !important;
   }
+
+  @keyframes cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  .typing-cursor {
+    display: inline-block;
+    margin-left: 2px;
+    font-weight: 600;
+    animation: cursor-blink 850ms steps(1, end) infinite;
+  }
+
+  @keyframes grid-drift {
+    0% {
+      background-position: 0 0, 0 0;
+    }
+    100% {
+      background-position: 0 120px, 120px 0;
+    }
+  }
+
+  .grid-texture {
+    background-image:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 34px 34px;
+    animation: grid-drift 14s linear infinite;
+    opacity: 0.22;
+  }
+
+  .theme-light .grid-texture,
+  .theme-classic .grid-texture {
+    background-image:
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    opacity: 0.18;
+  }
 }
 
 /* Custom Scrollbar */

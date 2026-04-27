@@ -65,6 +65,45 @@ const ModeToggle = ({ mode, setMode, theme }: { mode: 'editorial' | 'terminal', 
   </div>
 );
 
+const TypewriterText = ({ lines, className }: { lines: string[]; className?: string }) => {
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  const currentLine = lines[lineIndex] || '';
+
+  useEffect(() => {
+    const atEnd = charIndex === currentLine.length;
+    const atStart = charIndex === 0;
+
+    let delay = deleting ? 22 : 30;
+    if (!deleting && atEnd) delay = 1400;
+    if (deleting && atStart) delay = 240;
+
+    const timer = setTimeout(() => {
+      if (!deleting && atEnd) {
+        setDeleting(true);
+        return;
+      }
+      if (deleting && atStart) {
+        setDeleting(false);
+        setLineIndex((prev) => (prev + 1) % lines.length);
+        return;
+      }
+      setCharIndex((prev) => prev + (deleting ? -1 : 1));
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [charIndex, currentLine.length, deleting, lines.length]);
+
+  return (
+    <span className={className}>
+      {currentLine.slice(0, charIndex)}
+      <span className="typing-cursor" aria-hidden="true">|</span>
+    </span>
+  );
+};
+
 // --- Editorial View Components ---
 
 const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection, theme, onToggleTheme }: { onContact: () => void, onOpenEntry: (entry: DetailEntry) => void, activeSection: string, setActiveSection: (s: string) => void, theme: ThemeMode, onToggleTheme: () => void }) => {
@@ -91,7 +130,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                 </span>
               </div>
               <p className={`mt-5 max-w-3xl text-[22px] md:text-[24px] leading-relaxed ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
-                Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals. Founder of RAB (top-ranked CTF team). Campus Ambassador at Hackvisor and Joint Secretary (Cyber Security) at BUP Computer Programming Club. Passionate about reverse engineering and system security.
+                <TypewriterText
+                  lines={[
+                    'Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals.',
+                    'Founder of RAB, a top-ranked CTF team with global competitive results.',
+                    'Passionate about reverse engineering, binary exploitation, and system security.',
+                  ]}
+                />
               </p>
               <div className="mt-10 flex items-center gap-4">
                 <button onClick={() => setActiveSection('profile')} className={`px-1 py-2 text-sm font-bold tracking-wide uppercase cursor-pointer transition-colors border-b ${isLight ? 'text-black border-black hover:opacity-70' : 'text-white border-white hover:opacity-80'}`}>
@@ -130,6 +175,9 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                 </a>
                 <a href="https://github.com/Emon095" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
                   <Github size={16} />
+                </a>
+                <a href="mailto:smshahrieremon@gmail.com" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`} title="smshahrieremon@gmail.com" aria-label="Email">
+                  <Mail size={16} />
                 </a>
               </div>
             </div>
@@ -819,6 +867,7 @@ const App: React.FC = () => {
 
   return (
     <div className={`relative min-h-screen overflow-x-hidden ${isEditorial ? (theme === 'dark' ? 'bg-[#090909] text-[#ededed]' : theme === 'classic' ? 'bg-[#d4c9b6] text-[#2a2118]' : 'bg-[#d8d8d8] text-[#1a1a1a]') : 'bg-mono-bg text-gray-400'} ${flickering ? 'opacity-70' : 'opacity-100'}`}>
+      {isEditorial ? <div className={`grid-texture ${theme === 'dark' ? 'theme-dark' : theme === 'classic' ? 'theme-classic' : 'theme-light'} fixed inset-0 pointer-events-none`} /> : null}
       {!isEditorial ? <Scanlines /> : null}
       <ModeToggle mode={mode} setMode={setMode} theme={theme} />
       
