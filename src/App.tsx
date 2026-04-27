@@ -89,6 +89,9 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-normal leading-none tracking-tight text-white italic">
                     {USER_INFO.name}
                   </h1>
+                  <p className="max-w-xl text-sm md:text-base text-mono-muted leading-relaxed">
+                    Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals. Founder of RAB (top-ranked CTF team). Campus Ambassador at Hackvisor and Joint Secretary (Cyber Security) at BUP Computer Programming Club. Passionate about reverse engineering and system security.
+                  </p>
                   <p className="text-sm md:text-base lg:text-lg uppercase tracking-[6px] md:tracking-[7px] text-mono-muted font-sans font-light">
                     {USER_INFO.role}
                   </p>
