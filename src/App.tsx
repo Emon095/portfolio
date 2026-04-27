@@ -211,16 +211,16 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             items: typeof ACHIEVEMENTS;
           }> = [
             {
-              category: 'International',
-              items: ACHIEVEMENTS.filter((item) => item.category === 'International'),
+              category: 'Inter University',
+              items: ACHIEVEMENTS.filter((item) => item.category === 'Inter University'),
             },
             {
               category: 'National',
               items: ACHIEVEMENTS.filter((item) => item.category === 'National'),
             },
             {
-              category: 'Inter University',
-              items: ACHIEVEMENTS.filter((item) => item.category === 'Inter University'),
+              category: 'International',
+              items: ACHIEVEMENTS.filter((item) => item.category === 'International'),
             },
           ].filter((group) => group.items.length > 0);
 
