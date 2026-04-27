@@ -6,6 +6,7 @@ Each section now loads **all markdown files** from its folder.
 
 - Open vault at: `src/content`
 - Obsidian attachment folder: `_assets`
+- Obsidian templates folder: `_templates`
 - Use Obsidian Git plugin to commit/push from the vault
 - Image assets are automatically synced to `public/content-assets` on `npm run dev` and `npm run build`
 
@@ -20,6 +21,7 @@ Each section now loads **all markdown files** from its folder.
 - `projects/` -> one project per file
 - `media/` -> one movie/series review per file
 - `_assets/` -> images/files attached from Obsidian
+- `_templates/` -> reusable section templates for quick insert/write
 
 ## File Format
 
@@ -37,3 +39,14 @@ Each section now loads **all markdown files** from its folder.
 - Obsidian embeds like `![[image.png]]` are supported and auto-resolved to `/content-assets/image.png`.
 
 Parsed by `src/data.ts` at build/runtime.
+
+## Ready Templates
+
+- `_templates/home-template.md`
+- `_templates/about-template.md`
+- `_templates/writeup-template.md`
+- `_templates/achievement-template.md`
+- `_templates/certification-template.md`
+- `_templates/project-template.md`
+- `_templates/education-template.md`
+- `_templates/media-review-template.md`
