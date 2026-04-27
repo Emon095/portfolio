@@ -426,7 +426,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             onClick={() => setActiveSection('home')}
             className="text-2xl md:text-3xl font-display font-normal leading-none tracking-tighter hover:opacity-70 transition-opacity cursor-pointer text-white"
           >
-            MONOLITH_OS <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{safeText(USER_INFO.name).split(' ')[2] || 'USER'}]</span>
+            kathos <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{safeText(USER_INFO.name).split(' ')[2] || 'USER'}]</span>
           </button>
         </div>
         <nav className="flex flex-wrap justify-center gap-4 md:gap-8 text-[11px] uppercase tracking-[2px] font-sans">
