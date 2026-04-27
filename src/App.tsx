@@ -69,10 +69,10 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex-1 flex flex-col md:flex-row items-center justify-between gap-16 py-20"
+            className="flex-1 flex flex-col md:flex-row items-center justify-between gap-10 md:gap-12 py-20"
           >
             {/* Left Section: Hero */}
-            <div className="flex-1 flex flex-col items-center gap-12 md:-ml-10 lg:-ml-14">
+            <div className="flex-1 flex flex-col items-start gap-8 md:-ml-10 lg:-ml-14">
               <div className="relative group -ml-4 md:-ml-8 lg:-ml-12">
                 <div className="absolute -inset-1 bg-mono-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                 <div className="relative w-72 h-84 md:w-[26rem] md:h-[32rem] overflow-hidden rounded-2xl border border-mono-border shadow-2xl">
@@ -84,7 +84,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                   <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-mono-bg via-mono-bg/75 to-transparent pointer-events-none" />
                 </div>
               </div>
-              <div className="space-y-4 text-center">
+              <div className="space-y-4 text-left">
                 <h1 className="text-5xl md:text-7xl font-display font-normal leading-none tracking-tight text-white italic">
                   {USER_INFO.name}
                 </h1>
