@@ -99,9 +99,9 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             </div>
 
             {/* Right Section: Top Achievements Highlights */}
-            <div className="w-full md:w-[380px] space-y-12">
+            <div className="w-full md:w-[380px] md:ml-auto space-y-12 text-left md:text-right">
               <div>
-                <div className="column-title">Top Achievements</div>
+                <div className="column-title md:justify-end">Top Achievements</div>
                 <div className="space-y-8 mt-8">
                   {ACHIEVEMENTS.slice(0, 3).map((ach) => (
                     <motion.div 
@@ -114,7 +114,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                       <h4 className="text-[17px] font-semibold text-white group-hover:text-mono-accent transition-colors leading-snug">
                         {ach.title}
                       </h4>
-                      <p className="text-[11px] text-mono-muted mt-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2">
+                      <p className="text-[11px] text-mono-muted mt-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 md:justify-end">
                         View Detailed Record <ChevronRight size={12} />
                       </p>
                     </motion.div>
@@ -138,7 +138,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             className="flex flex-col gap-16 py-12"
           >
             <section className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              <div>
+              <div className="md:ml-6 lg:ml-10 text-left">
                 <div className="column-title">About_Identity</div>
                 <h2 className="text-4xl font-display italic leading-tight text-white mb-6">
                   Securing digital monoliths through code and research.
@@ -147,10 +147,10 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                   <Markdown>{safeText(USER_INFO.bio)}</Markdown>
                 </div>
               </div>
-              <div className="space-y-12">
+              <div className="space-y-12 md:mr-6 lg:mr-10 text-left md:text-right">
                 <div>
-                  <div className="column-title">Tech_Stack</div>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="column-title md:justify-end">Tech_Stack</div>
+                  <div className="flex flex-wrap gap-2 md:justify-end">
                     {TECH_STACK.map((tech) => (
                       <span key={tech} className="inline-block px-3 py-1 border border-mono-border rounded-full text-[10px] text-mono-accent hover:border-white transition-colors">
                         {tech}
@@ -159,7 +159,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                   </div>
                 </div>
                 <div>
-                   <div className="column-title">Current_Node</div>
+                   <div className="column-title md:justify-end">Current_Node</div>
                    <p className="text-white font-mono text-sm uppercase tracking-widest">{USER_INFO.location}</p>
                 </div>
               </div>
