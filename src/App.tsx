@@ -74,14 +74,17 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             {/* Left Section: Hero */}
             <div className="flex-1 flex flex-col items-start gap-12">
               <div className="relative group -ml-4 md:-ml-8 lg:-ml-12">
-                <div className="absolute -inset-1 bg-mono-accent/20 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                <img 
-                  src={USER_INFO.image} 
-                  alt={USER_INFO.name}
-                  className="relative w-64 h-64 md:w-80 md:h-80 object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-700 border border-mono-border shadow-2xl"
-                />
+                <div className="absolute -inset-1 bg-mono-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div className="relative w-72 h-84 md:w-[26rem] md:h-[32rem] overflow-hidden rounded-2xl border border-mono-border shadow-2xl">
+                  <img
+                    src={USER_INFO.image}
+                    alt={USER_INFO.name}
+                    className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-mono-bg via-mono-bg/75 to-transparent pointer-events-none" />
+                </div>
               </div>
-              <div className="space-y-4 text-left">
+              <div className="space-y-4 text-left ml-3 md:ml-6">
                 <h1 className="text-5xl md:text-7xl font-display font-normal leading-none tracking-tight text-white italic">
                   {USER_INFO.name}
                 </h1>
