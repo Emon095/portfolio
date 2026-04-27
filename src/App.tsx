@@ -16,7 +16,7 @@ import {
   ChevronRight,
   Monitor
 } from 'lucide-react';
-import { USER_INFO, PROJECTS, ACHIEVEMENTS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS } from './data';
+import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS } from './data';
 
 // --- Shared Components ---
 const safeText = (value: unknown, fallback = ''): string => {
@@ -96,7 +96,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                     <motion.div 
                       key={ach.id} 
                       whileHover={{ x: 10 }}
-                      onClick={() => setActiveSection('certifications')}
+                      onClick={() => setActiveSection('achievements')}
                       className="group cursor-pointer border-b border-mono-border/30 pb-6 hover:border-mono-accent transition-all"
                     >
                       <div className="font-mono text-[10px] text-mono-muted mb-2 tracking-[2px]">{formatDate(ach.date)}</div>
@@ -178,14 +178,14 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             </div>
           </motion.div>
         );
-      case 'certifications':
+      case 'achievements':
         return (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="py-12"
           >
-            <div className="column-title">Industry_Validation</div>
+            <div className="column-title">Achievements_Record</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
               {ACHIEVEMENTS.map((ach) => (
                 <div key={ach.id} className="terminal-card group flex flex-col justify-between">
@@ -204,6 +204,45 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                     <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {ach.issuer}</div>
                     <div className="text-sm text-mono-muted/80 leading-relaxed italic border-l border-mono-border pl-4">
                       <Markdown>{safeText(ach.description)}</Markdown>
+                    </div>
+                  </div>
+                  <div className="mt-8 pt-6 border-t border-mono-border/30 flex justify-between items-center">
+                    <button className="text-[11px] font-mono text-mono-muted hover:text-white transition-all underline underline-offset-4 uppercase tracking-widest">
+                      Verify_Record
+                    </button>
+                    <ShieldCheck size={16} className="text-mono-border group-hover:text-mono-accent transition-colors" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        );
+      case 'certifications':
+        return (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="py-12"
+          >
+            <div className="column-title">Industry_Validation</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
+              {CERTIFICATIONS.map((cert) => (
+                <div key={cert.id} className="terminal-card group flex flex-col justify-between">
+                  <div>
+                    {cert.heroImage ? (
+                      <div className="mb-5 overflow-hidden border border-mono-border/50">
+                        <img
+                          src={cert.heroImage}
+                          alt={cert.title}
+                          className="w-full h-44 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        />
+                      </div>
+                    ) : null}
+                    <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{formatDate(cert.date)}</div>
+                    <h4 className="text-2xl font-display text-white group-hover:text-mono-accent transition-colors leading-snug mb-4">{cert.title}</h4>
+                    <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {cert.issuer}</div>
+                    <div className="text-sm text-mono-muted/80 leading-relaxed italic border-l border-mono-border pl-4">
+                      <Markdown>{safeText(cert.description)}</Markdown>
                     </div>
                   </div>
                   <div className="mt-8 pt-6 border-t border-mono-border/30 flex justify-between items-center">
@@ -354,6 +393,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             { id: 'profile', label: 'About' },
             { id: 'writeups', label: 'Writeups' },
             { id: 'education', label: 'Education' },
+            { id: 'achievements', label: 'Achievements' },
             { id: 'certifications', label: 'Certifications' },
             { id: 'projects', label: 'Projects' },
             { id: 'media', label: 'Vault' },
@@ -447,10 +487,13 @@ const TerminalView = () => {
         response.push(USER_INFO.bio, `Base: ${USER_INFO.location}`, `Active_Task: ${USER_INFO.currentlyBuilding}`);
         break;
       case 'ls':
-        response.push('achievements.log  education.db  projects.list  media.archive  writeups.txt');
+        response.push('achievements.log  certifications.log  education.db  projects.list  media.archive  writeups.txt');
         break;
       case 'cat achievements.log':
         ACHIEVEMENTS.forEach(a => response.push(`[${a.date}] ${a.title} - ${a.issuer}`));
+        break;
+      case 'cat certifications.log':
+        CERTIFICATIONS.forEach(c => response.push(`[${c.date}] ${c.title} - ${c.issuer}`));
         break;
       case 'cat projects.list':
         PROJECTS.forEach(p => response.push(`> ${p.title} (${p.date}): ${p.description}`));

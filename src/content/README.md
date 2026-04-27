@@ -9,7 +9,7 @@ Each section now loads **all markdown files** from its folder.
 - `writeups/` -> one writeup per file
 - `education/` -> one education record per file
 - `certifications/` -> one certification record per file
-- `achievements/` -> optional extra achievement records (merged with certifications)
+- `achievements/` -> one achievement record per file
 - `projects/` -> one project per file
 - `vault/` -> one vault/media item per file
 

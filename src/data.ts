@@ -17,6 +17,15 @@ export interface Achievement {
   heroImage?: string;
 }
 
+export interface Certification {
+  id: string;
+  title: string;
+  issuer: string;
+  date: string;
+  description: string;
+  heroImage?: string;
+}
+
 export interface MediaRecord {
   id: string;
   title: string;
@@ -76,10 +85,8 @@ const vaultFiles = import.meta.glob('./content/vault/*.md', {eager: true, query:
 
 const home = mergeKeyValueCollection(homeFiles);
 const about = mergeKeyValueCollection(aboutFiles);
-const certifications = [
-  ...parseCollection(certificationFiles),
-  ...parseCollection(achievementFiles),
-];
+const certifications = parseCollection(certificationFiles);
+const achievements = parseCollection(achievementFiles);
 const projects = parseCollection(projectFiles);
 const writeups = parseCollection(writeupFiles);
 const education = parseCollection(educationFiles);
@@ -115,8 +122,17 @@ export const PROJECTS: Project[] = projects.map((item, index) => ({
   heroImage: item.hero_image || item.image || undefined,
 }));
 
-export const ACHIEVEMENTS: Achievement[] = certifications.map((item, index) => ({
+export const CERTIFICATIONS: Certification[] = certifications.map((item, index) => ({
   id: toId(item.title || '', `certification-${index + 1}`),
+  title: item.title || 'Untitled Certification',
+  issuer: item.issuer || '',
+  date: item.date || '',
+  description: item.desc || '',
+  heroImage: item.hero_image || item.image || undefined,
+}));
+
+export const ACHIEVEMENTS: Achievement[] = achievements.map((item, index) => ({
+  id: toId(item.title || '', `achievement-${index + 1}`),
   title: item.title || 'Untitled Achievement',
   issuer: item.issuer || '',
   date: item.date || '',
