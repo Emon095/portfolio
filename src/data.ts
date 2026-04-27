@@ -92,12 +92,18 @@ export const USER_INFO = {
 
 export const PROJECTS: Project[] = (parsed.projects || []).map((p: any) => ({
   ...p,
-  description: p.desc || ""
+  title: p.title || 'Untitled Project',
+  date: p.date || '',
+  tags: Array.isArray(p.tags) ? p.tags : [],
+  description: p.desc || '',
 }));
 
 export const ACHIEVEMENTS: Achievement[] = (parsed.achievements || []).map((a: any) => ({
   ...a,
-  description: a.desc || ""
+  title: a.title || 'Untitled Achievement',
+  issuer: a.issuer || '',
+  date: a.date || '',
+  description: a.desc || '',
 }));
 
 export const MEDIA: MediaRecord[] = parsed.media || [];
@@ -106,7 +112,10 @@ export const EDUCATION = parsed.education || [];
 
 export const WRITEUPS = (parsed.writeups || []).map((w: any) => ({
   ...w,
-  excerpt: w.desc || ""
+  title: w.title || 'Untitled Writeup',
+  date: w.date || '',
+  category: w.category || 'General',
+  excerpt: w.desc || '',
 }));
 
 export const TECH_STACK = parsed.tech_stack || [];

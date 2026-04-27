@@ -19,6 +19,16 @@ import {
 import { USER_INFO, PROJECTS, ACHIEVEMENTS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS } from './data';
 
 // --- Shared Components ---
+const safeText = (value: unknown, fallback = ''): string => {
+  if (typeof value === 'string') return value;
+  if (value === null || value === undefined) return fallback;
+  return String(value);
+};
+
+const formatDate = (value: unknown): string => {
+  const text = safeText(value);
+  return text ? text.replace('-', '.') : 'N/A';
+};
 
 const Scanlines = () => <div className="scanlines" />;
 
@@ -89,7 +99,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                       onClick={() => setActiveSection('certifications')}
                       className="group cursor-pointer border-b border-mono-border/30 pb-6 hover:border-mono-accent transition-all"
                     >
-                      <div className="font-mono text-[10px] text-mono-muted mb-2 tracking-[2px]">{ach.date.replace('-', '.')}</div>
+                      <div className="font-mono text-[10px] text-mono-muted mb-2 tracking-[2px]">{formatDate(ach.date)}</div>
                       <h4 className="text-[17px] font-semibold text-white group-hover:text-mono-accent transition-colors leading-snug">
                         {ach.title}
                       </h4>
@@ -123,7 +133,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                   Securing digital monoliths through code and research.
                 </h2>
                 <div className="text-[16px] leading-relaxed text-mono-muted space-y-4">
-                  <Markdown>{USER_INFO.bio}</Markdown>
+                  <Markdown>{safeText(USER_INFO.bio)}</Markdown>
                 </div>
               </div>
               <div className="space-y-12">
@@ -161,7 +171,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                   <h3 className="text-3xl font-display text-white mb-2">{edu.institution}</h3>
                   <p className="text-xl text-mono-muted italic font-display mb-6">{edu.degree}</p>
                   <div className="text-sm text-mono-muted leading-relaxed max-w-2xl">
-                    <Markdown>{edu.details}</Markdown>
+                    <Markdown>{safeText(edu.details)}</Markdown>
                   </div>
                 </div>
               ))}
@@ -180,11 +190,11 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
               {ACHIEVEMENTS.map((ach) => (
                 <div key={ach.id} className="terminal-card group flex flex-col justify-between">
                   <div>
-                    <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{ach.date.replace('-', '.')}</div>
+                    <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{formatDate(ach.date)}</div>
                     <h4 className="text-2xl font-display text-white group-hover:text-mono-accent transition-colors leading-snug mb-4">{ach.title}</h4>
                     <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {ach.issuer}</div>
                     <div className="text-sm text-mono-muted/80 leading-relaxed italic border-l border-mono-border pl-4">
-                      <Markdown>{ach.description}</Markdown>
+                      <Markdown>{safeText(ach.description)}</Markdown>
                     </div>
                   </div>
                   <div className="mt-8 pt-6 border-t border-mono-border/30 flex justify-between items-center">
@@ -217,7 +227,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                   </div>
                   <h4 className="text-2xl font-display text-white mb-4 group-hover:text-mono-accent transition-colors leading-tight">{w.title}</h4>
                   <div className="text-sm text-mono-muted leading-relaxed mb-6 line-clamp-3">
-                    <Markdown>{w.excerpt}</Markdown>
+                    <Markdown>{safeText(w.excerpt)}</Markdown>
                   </div>
                   <div className="flex items-center gap-2 text-[11px] font-mono text-mono-accent opacity-0 group-hover:opacity-100 transition-all transform translate-x-[-10px] group-hover:translate-x-0">
                     READ_INTEL <ChevronRight size={12} />
@@ -244,10 +254,10 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                    </div>
                    <h3 className="text-2xl font-display text-white mb-4 group-hover:text-mono-accent transition-colors italic">{project.title}</h3>
                    <div className="text-sm text-mono-muted mb-6 leading-relaxed">
-                     <Markdown>{project.description}</Markdown>
+                     <Markdown>{safeText(project.description)}</Markdown>
                    </div>
                    <div className="flex flex-wrap gap-2">
-                     {project.tags.map(tag => (
+                     {(project.tags || []).map(tag => (
                        <span key={tag} className="text-[10px] font-mono border border-mono-border px-2 py-1 uppercase text-mono-muted">
                          {tag}
                        </span>
@@ -301,7 +311,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             onClick={() => setActiveSection('home')}
             className="text-2xl md:text-3xl font-display font-normal leading-none tracking-tighter hover:opacity-70 transition-opacity cursor-pointer text-white"
           >
-            MONOLITH_OS <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{USER_INFO.name.split(' ')[2]}]</span>
+            MONOLITH_OS <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{safeText(USER_INFO.name).split(' ')[2] || 'USER'}]</span>
           </button>
         </div>
         <nav className="flex flex-wrap justify-center gap-4 md:gap-8 text-[11px] uppercase tracking-[2px] font-sans">
