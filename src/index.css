@@ -77,6 +77,14 @@
     --color-mono-border: rgba(255, 255, 255, 0.2);
   }
 
+  .theme-classic {
+    --color-mono-bg: #e7dfd1;
+    --color-mono-surface: #f2ecdf;
+    --color-mono-accent: #2f2518;
+    --color-mono-muted: rgba(47, 37, 24, 0.72);
+    --color-mono-border: rgba(47, 37, 24, 0.26);
+  }
+
   .theme-light .terminal-card {
     @apply border-black/15 bg-[#f7f7f7] hover:bg-[#f1f1f1];
   }
@@ -95,6 +103,14 @@
 
   .theme-dark .column-title {
     @apply text-white/65;
+  }
+
+  .theme-classic .terminal-card {
+    @apply border-[#4a3924]/25 bg-[#f2ecdf] hover:bg-[#ebe2d1];
+  }
+
+  .theme-classic .column-title {
+    @apply text-[#4a3924]/70;
   }
 
   .theme-light .text-white {

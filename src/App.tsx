@@ -44,20 +44,20 @@ type DetailEntry = {
 
 const Scanlines = () => <div className="scanlines" />;
 
-type ThemeMode = 'light' | 'dark';
+type ThemeMode = 'light' | 'dark' | 'classic';
 
 const ModeToggle = ({ mode, setMode, theme }: { mode: 'editorial' | 'terminal', setMode: (m: 'editorial' | 'terminal') => void, theme: ThemeMode }) => (
-  <div className={`fixed top-4 right-4 md:top-8 md:right-8 z-[60] flex items-center gap-2 backdrop-blur-md p-1 rounded-full border ${mode === 'editorial' ? (theme === 'light' ? 'bg-white/85 border-black/20' : 'bg-[#171717]/85 border-white/15') : 'bg-mono-surface/80 border-mono-border'}`}>
+  <div className={`fixed top-4 right-4 md:top-8 md:right-8 z-[60] flex items-center gap-2 backdrop-blur-md p-1 rounded-full border ${mode === 'editorial' ? (theme === 'dark' ? 'bg-[#171717]/85 border-white/15' : 'bg-white/85 border-black/20') : 'bg-mono-surface/80 border-mono-border'}`}>
     <button 
       onClick={() => setMode('editorial')}
-      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'editorial' ? (theme === 'light' ? 'bg-black text-white' : 'bg-white text-black') : 'text-mono-muted hover:text-white'}`}
+      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'editorial' ? (theme === 'dark' ? 'bg-white text-black' : 'bg-black text-white') : 'text-mono-muted hover:text-white'}`}
       title="Editorial View"
     >
       <LayoutIcon size={18} />
     </button>
     <button 
       onClick={() => setMode('terminal')}
-      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'terminal' ? 'bg-mono-accent text-mono-bg' : mode === 'editorial' ? 'text-black/60 hover:text-black' : 'text-mono-muted hover:text-white'}`}
+      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'terminal' ? 'bg-mono-accent text-mono-bg' : mode === 'editorial' ? (theme === 'dark' ? 'text-white/65 hover:text-white' : 'text-black/60 hover:text-black') : 'text-mono-muted hover:text-white'}`}
       title="Terminal View"
     >
       <TerminalIcon size={18} />
@@ -69,7 +69,8 @@ const ModeToggle = ({ mode, setMode, theme }: { mode: 'editorial' | 'terminal', 
 
 const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection, theme, onToggleTheme }: { onContact: () => void, onOpenEntry: (entry: DetailEntry) => void, activeSection: string, setActiveSection: (s: string) => void, theme: ThemeMode, onToggleTheme: () => void }) => {
   const isHome = true;
-  const isLight = theme === 'light';
+  const isLight = theme !== 'dark';
+  const isClassic = theme === 'classic';
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
@@ -88,12 +89,9 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                 <span className={`font-semibold px-2 py-1 ${isLight ? 'bg-[#efbbab] text-[#111]' : 'bg-white/15 text-white'}`}>
                   {USER_INFO.role}
                 </span>
-                <span className={`text-[26px] md:text-[30px] font-normal ml-2 align-middle ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
-                  building practical security systems.
-                </span>
               </div>
-              <p className={`mt-5 max-w-lg text-[28px] leading-relaxed ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
-                Cybersecurity enthusiast, CTF player, and builder focused on reverse engineering, pwn, and web security.
+              <p className={`mt-5 max-w-3xl text-[22px] md:text-[24px] leading-relaxed ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
+                Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals. Founder of RAB (top-ranked CTF team). Campus Ambassador at Hackvisor and Joint Secretary (Cyber Security) at BUP Computer Programming Club. Passionate about reverse engineering and system security.
               </p>
               <div className="mt-10 flex items-center gap-4">
                 <button onClick={() => setActiveSection('profile')} className={`px-5 py-4 text-sm font-semibold tracking-wide uppercase cursor-pointer transition-opacity ${isLight ? 'bg-black text-white hover:opacity-90' : 'bg-white text-black hover:opacity-90'}`}>
@@ -525,7 +523,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`${isLight ? 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]' : 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]'} min-h-screen w-full max-w-[1160px] mx-auto flex flex-col mt-6 md:mt-10 px-6 md:px-12 lg:px-16 pt-8 md:pt-10 pb-10 md:pb-14`}
+      className={`${theme === 'dark' ? 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]' : theme === 'classic' ? 'theme-classic bg-[#e7dfd1] text-[#2a2118] shadow-[0_24px_56px_rgba(49,33,20,0.2)]' : 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]'} min-h-screen w-full max-w-[1160px] mx-auto flex flex-col mt-6 md:mt-10 px-6 md:px-12 lg:px-16 pt-8 md:pt-10 pb-10 md:pb-14`}
     >
       {/* Header Section */}
       <header className={`flex flex-col md:flex-row justify-between items-center ${isHome ? 'pb-7 mb-4 gap-6' : 'border-b border-mono-border pb-8 mb-8 gap-8'}`}>
@@ -566,7 +564,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
           </button>
           {isHome ? (
             <button onClick={onToggleTheme} className={`px-2 cursor-pointer transition-colors ${isLight ? 'text-[#666] hover:text-black' : 'text-white/70 hover:text-white'}`} aria-label="Toggle theme">
-              {isLight ? <Moon size={16} /> : <Sun size={16} />}
+              {theme === 'light' ? <Moon size={16} /> : theme === 'dark' ? <Sun size={16} /> : <Monitor size={16} />}
             </button>
           ) : null}
         </nav>
@@ -597,7 +595,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
 };
 
 const EntryPage = ({ entry, onBack, theme }: { entry: DetailEntry; onBack: () => void, theme: ThemeMode }) => {
-  const isLight = theme === 'light';
+  const isLight = theme !== 'dark';
   const sectionName = entry.section === 'writeups'
     ? 'Writeups'
     : entry.section === 'achievements'
@@ -611,7 +609,7 @@ const EntryPage = ({ entry, onBack, theme }: { entry: DetailEntry; onBack: () =>
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
-      className={`${isLight ? 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]' : 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]'} min-h-screen w-full max-w-[1160px] mx-auto mt-6 md:mt-10 pb-16 px-6 md:px-12 lg:px-16 pt-10`}
+      className={`${theme === 'dark' ? 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]' : theme === 'classic' ? 'theme-classic bg-[#e7dfd1] text-[#2a2118] shadow-[0_24px_56px_rgba(49,33,20,0.2)]' : 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]'} min-h-screen w-full max-w-[1160px] mx-auto mt-6 md:mt-10 pb-16 px-6 md:px-12 lg:px-16 pt-10`}
     >
       <div className="max-w-5xl mx-auto">
         <button
@@ -763,7 +761,7 @@ const TerminalView = () => {
 const App: React.FC = () => {
   const [mode, setMode] = useState<'editorial' | 'terminal'>('editorial');
   const [activeSection, setActiveSection] = useState('home');
-  const [theme, setTheme] = useState<ThemeMode>('light');
+  const [theme, setTheme] = useState<ThemeMode>('classic');
   const isEditorial = mode === 'editorial';
 
   // Flicker effect on mode change
@@ -778,7 +776,7 @@ const App: React.FC = () => {
   const [selectedEntry, setSelectedEntry] = useState<DetailEntry | null>(null);
 
   return (
-    <div className={`relative min-h-screen overflow-x-hidden ${isEditorial ? (theme === 'light' ? 'bg-[#d8d8d8] text-[#1a1a1a]' : 'bg-[#090909] text-[#ededed]') : 'bg-mono-bg text-gray-400'} ${flickering ? 'opacity-70' : 'opacity-100'}`}>
+    <div className={`relative min-h-screen overflow-x-hidden ${isEditorial ? (theme === 'dark' ? 'bg-[#090909] text-[#ededed]' : theme === 'classic' ? 'bg-[#d4c9b6] text-[#2a2118]' : 'bg-[#d8d8d8] text-[#1a1a1a]') : 'bg-mono-bg text-gray-400'} ${flickering ? 'opacity-70' : 'opacity-100'}`}>
       {!isEditorial ? <Scanlines /> : null}
       <ModeToggle mode={mode} setMode={setMode} theme={theme} />
       
@@ -794,7 +792,7 @@ const App: React.FC = () => {
               activeSection={activeSection} 
               setActiveSection={setActiveSection}
               theme={theme}
-              onToggleTheme={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
+              onToggleTheme={() => setTheme((prev) => (prev === 'light' ? 'dark' : prev === 'dark' ? 'classic' : 'light'))}
             />
           )
         ) : (
@@ -805,34 +803,34 @@ const App: React.FC = () => {
       {/* Contact Modal */}
       <AnimatePresence>
         {showContact && (
-          <div className={`fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl ${isEditorial ? (theme === 'light' ? 'bg-black/25' : 'bg-black/55') : 'bg-mono-bg/60'}`}>
+          <div className={`fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl ${isEditorial ? (theme === 'dark' ? 'bg-black/55' : 'bg-black/25') : 'bg-mono-bg/60'}`}>
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className={`${isEditorial ? (theme === 'light' ? 'theme-light' : 'theme-dark') : ''} terminal-card w-full max-w-lg relative`}
+              className={`${isEditorial ? (theme === 'dark' ? 'theme-dark' : theme === 'classic' ? 'theme-classic' : 'theme-light') : ''} terminal-card w-full max-w-lg relative`}
             >
               <button 
                 onClick={() => setShowContact(false)}
-                className={`absolute top-4 right-4 ${isEditorial ? (theme === 'light' ? 'text-black/55 hover:text-black' : 'text-white/65 hover:text-white') : 'text-mono-muted hover:text-mono-accent'} cursor-pointer`}
+                className={`absolute top-4 right-4 ${isEditorial ? (theme === 'dark' ? 'text-white/65 hover:text-white' : 'text-black/55 hover:text-black') : 'text-mono-muted hover:text-mono-accent'} cursor-pointer`}
               >
                 [X]_CLOSE
               </button>
-              <h2 className={`text-2xl font-bold mb-8 flex items-center gap-2 ${isEditorial ? (theme === 'light' ? 'text-black' : 'text-white') : ''}`}>
-                <Mail size={24} className={`${isEditorial ? (theme === 'light' ? 'text-black' : 'text-white') : 'text-mono-accent'}`} /> Establish_Connection
+              <h2 className={`text-2xl font-bold mb-8 flex items-center gap-2 ${isEditorial ? (theme === 'dark' ? 'text-white' : 'text-black') : ''}`}>
+                <Mail size={24} className={`${isEditorial ? (theme === 'dark' ? 'text-white' : 'text-black') : 'text-mono-accent'}`} /> Establish_Connection
               </h2>
               <form className="space-y-6">
                 <div>
                   <label className="block font-mono text-xs text-mono-muted uppercase mb-2">Identifier_Name</label>
-                  <input type="text" className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'light' ? 'bg-white/70' : 'bg-white/5') : 'bg-mono-bg'}`} />
+                  <input type="text" className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'dark' ? 'bg-white/5' : 'bg-white/70') : 'bg-mono-bg'}`} />
                 </div>
                 <div>
                   <label className="block font-mono text-xs text-mono-muted uppercase mb-2">Protocol_Email</label>
-                  <input type="email" className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'light' ? 'bg-white/70' : 'bg-white/5') : 'bg-mono-bg'}`} />
+                  <input type="email" className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'dark' ? 'bg-white/5' : 'bg-white/70') : 'bg-mono-bg'}`} />
                 </div>
                 <div>
                   <label className="block font-mono text-xs text-mono-muted uppercase mb-2">Packet_Payload</label>
-                  <textarea rows={4} className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'light' ? 'bg-white/70' : 'bg-white/5') : 'bg-mono-bg'}`} />
+                  <textarea rows={4} className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'dark' ? 'bg-white/5' : 'bg-white/70') : 'bg-mono-bg'}`} />
                 </div>
                 <button className="btn-primary w-full cursor-pointer">
                   SEND_PACKET
