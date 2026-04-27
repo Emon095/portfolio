@@ -58,6 +58,17 @@ interface ParsedMarkdownDoc {
   content: string;
 }
 
+const normalizeFieldValue = (value: string): string => {
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed;
+};
+
 const toId = (value: string, fallback: string) =>
   (value || fallback)
     .toLowerCase()
@@ -90,7 +101,7 @@ const parseMarkdownDocument = (raw: string): ParsedMarkdownDoc => {
       if (idx > 0) {
         const key = normalized.slice(0, idx).trim();
         if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
-          fields[key.toLowerCase()] = normalized.slice(idx + 1).trim();
+          fields[key.toLowerCase()] = normalizeFieldValue(normalized.slice(idx + 1));
           continue;
         }
       }
