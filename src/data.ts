@@ -201,7 +201,12 @@ const educationFiles = import.meta.glob('./content/education/*.md', {eager: true
 const mediaFiles = import.meta.glob('./content/media/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 
 const home = mergeKeyValueCollection(homeFiles);
-const about = mergeKeyValueCollection(aboutFiles);
+const aboutDocs = parseCollection(aboutFiles);
+const about = aboutDocs.reduce<MarkdownRecord>((acc, doc) => ({...acc, ...doc.fields}), {});
+const aboutBioContent = aboutDocs
+  .map((doc) => doc.content.trim())
+  .filter(Boolean)
+  .join('\n\n');
 const certifications = parseCollection(certificationFiles);
 const achievements = parseCollection(achievementFiles);
 const projects = parseCollection(projectFiles);
@@ -212,7 +217,7 @@ const media = parseCollection(mediaFiles);
 export const USER_INFO = {
   name: home.name || 'SM Shahrier Emon',
   role: home.role || 'Researcher',
-  bio: normalizeMarkdownBody(about.bio || ''),
+  bio: normalizeMarkdownBody(aboutBioContent || about.bio || ''),
   location: home.location || '',
   image: resolveContentAssetPath(home.image) || '',
   currentlyBuilding: home.current_building || '',
