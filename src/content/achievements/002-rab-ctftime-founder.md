@@ -1,7 +1,7 @@
 TITLE: Founder & #1 Ranked CTF Team (RAB)
 ISSUER: CTFtime
 DATE: Aug 2024 – Present
-CATEGORY: National
+CATEGORY: International
 DESC: Founded and led RAB to the #1 position on CTFtime through consistent high-level CTF results.
 HERO_IMAGE: _assets/Pasted image 20260427220941.png
 
