@@ -117,10 +117,10 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_420px] items-center gap-14 lg:gap-8 py-8 md:py-12"
+            className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_420px] items-center gap-10 lg:gap-8 py-8 md:py-12"
           >
             <div className="max-w-xl text-left lg:pl-8">
-              <h1 className={`text-5xl md:text-6xl lg:text-7xl font-sans font-semibold tracking-tight ${isLight ? 'text-[#0f0f0f]' : 'text-white'}`}>
+              <h1 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-semibold tracking-tight ${isLight ? 'text-[#0f0f0f]' : 'text-white'}`}>
                 {USER_INFO.name}
               </h1>
               <div className={`mt-7 text-xl md:text-[34px] leading-tight ${isLight ? 'text-[#151515]' : 'text-white/90'}`}>
@@ -129,7 +129,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                   {USER_INFO.role}
                 </span>
               </div>
-              <p className={`mt-5 max-w-3xl text-[22px] md:text-[24px] leading-relaxed ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
+              <p className={`mt-5 max-w-3xl text-base sm:text-lg md:text-[24px] leading-relaxed ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
                 <TypewriterText
                   lines={[
                     'Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals.',
@@ -154,7 +154,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               </div>
             </div>
 
-            <div className="relative w-full flex justify-center lg:justify-end lg:pr-10">
+            <div className="relative w-full flex justify-center lg:justify-end lg:pr-10 pb-20 md:pb-0">
               <div className="relative w-[320px] h-[430px] md:w-[360px] md:h-[490px]">
                 <div className={`absolute inset-0 border-4 translate-x-4 translate-y-4 ${isLight ? 'border-black' : 'border-white/90'}`} />
                 <div className="absolute inset-0 overflow-hidden">
@@ -166,7 +166,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                 </div>
               </div>
               <span className={`absolute left-[calc(50%-16px)] top-[48%] w-4 h-4 rotate-45 ${isLight ? 'bg-[#ef5c2e] border border-black' : 'bg-[#ffc98f] border border-white/80'}`} />
-              <div className="absolute right-[-2.9rem] md:right-[-3.4rem] top-1/2 -translate-y-1/2 flex flex-col gap-3">
+              <div className="absolute right-1/2 translate-x-1/2 -bottom-14 md:bottom-auto md:right-[-3.4rem] md:top-1/2 md:translate-x-0 md:-translate-y-1/2 flex flex-row md:flex-col gap-3">
                 <a href="https://www.instagram.com/shahrier_emon__/" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
                   <Instagram size={16} />
                 </a>
@@ -614,7 +614,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
       className={`${theme === 'dark' ? 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]' : theme === 'classic' ? 'theme-classic bg-[#e7dfd1] text-[#2a2118] shadow-[0_24px_56px_rgba(49,33,20,0.2)]' : 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]'} min-h-screen w-full max-w-[1160px] mx-auto flex flex-col mt-6 md:mt-10 px-6 md:px-12 lg:px-16 pt-8 md:pt-10 pb-10 md:pb-14`}
     >
       {/* Header Section */}
-      <header className={`flex flex-col md:flex-row justify-between items-center ${isHome ? 'pb-7 mb-4 gap-6' : 'border-b border-mono-border pb-8 mb-8 gap-8'}`}>
+      <header className={`flex flex-col md:flex-row justify-between md:items-center ${isHome ? 'pb-7 mb-4 gap-6' : 'border-b border-mono-border pb-8 mb-8 gap-8'}`}>
         <div className="name-title flex items-center gap-3">
           {isHome ? <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${isLight ? 'bg-black text-white' : 'bg-white text-black'}`}>{safeText(USER_INFO.name).charAt(0).toUpperCase() || 'U'}</span> : null}
           <button 
@@ -624,7 +624,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             {isHome ? USER_INFO.name : 'kathos'} {!isHome ? <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{safeText(USER_INFO.name).split(' ')[2] || 'USER'}]</span> : null}
           </button>
         </div>
-        <nav className={`flex flex-wrap justify-center ${isHome ? 'gap-4 md:gap-6 text-sm tracking-wide' : 'gap-4 md:gap-8 text-[11px] uppercase tracking-[2px]'} font-sans`}>
+        <nav className={`flex w-full md:w-auto overflow-x-auto flex-nowrap md:flex-wrap justify-start md:justify-center ${isHome ? 'gap-4 md:gap-6 text-sm tracking-wide' : 'gap-4 md:gap-8 text-[11px] uppercase tracking-[2px]'} font-sans`}>
           {[
             { id: 'home', label: 'Home' },
             { id: 'profile', label: 'About' },
@@ -639,7 +639,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             <button 
               key={item.id}
               onClick={() => setActiveSection(item.id)} 
-              className={`${isHome ? (isLight ? 'hover:text-black' : 'hover:text-white') : 'hover:text-white'} cursor-pointer transition-all relative py-2 ${activeSection === item.id ? (isHome ? (isLight ? 'text-black' : 'text-white') : 'text-white') : (isHome ? (isLight ? 'text-[#595959]' : 'text-white/60') : 'text-mono-muted')}`}
+              className={`${isHome ? (isLight ? 'hover:text-black' : 'hover:text-white') : 'hover:text-white'} shrink-0 cursor-pointer transition-all relative py-2 ${activeSection === item.id ? (isHome ? (isLight ? 'text-black' : 'text-white') : 'text-white') : (isHome ? (isLight ? 'text-[#595959]' : 'text-white/60') : 'text-mono-muted')}`}
             >
               {item.label}
               {activeSection === item.id && (
@@ -647,7 +647,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               )}
             </button>
           ))}
-          <button onClick={onContact} className={`${isHome ? `${isLight ? 'text-black border-black' : 'text-white border-white'} font-bold py-2 ml-2 border-b hover:opacity-80` : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
+          <button onClick={onContact} className={`${isHome ? `${isLight ? 'text-black border-black' : 'text-white border-white'} shrink-0 font-bold py-2 ml-2 border-b hover:opacity-80` : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
             {isHome ? 'Contact Me' : 'Connect'}
           </button>
           {isHome ? (
