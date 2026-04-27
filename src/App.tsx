@@ -94,7 +94,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                 Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals. Founder of RAB (top-ranked CTF team). Campus Ambassador at Hackvisor and Joint Secretary (Cyber Security) at BUP Computer Programming Club. Passionate about reverse engineering and system security.
               </p>
               <div className="mt-10 flex items-center gap-4">
-                <button onClick={() => setActiveSection('profile')} className="btn-force-white px-5 py-4 text-sm font-semibold tracking-wide uppercase cursor-pointer transition-opacity bg-black text-white hover:opacity-90">
+                <button onClick={() => setActiveSection('profile')} className={`px-1 py-2 text-sm font-bold tracking-wide uppercase cursor-pointer transition-colors border-b ${isLight ? 'text-black border-black hover:opacity-70' : 'text-white border-white hover:opacity-80'}`}>
                   About Me
                 </button>
                 <button onClick={() => setActiveSection('projects')} className={`px-5 py-4 border text-sm font-semibold tracking-wide uppercase cursor-pointer transition-all ${isLight ? 'border-black text-black hover:bg-black hover:text-white' : 'border-white/70 text-white hover:bg-white hover:text-black'}`}>
@@ -559,7 +559,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               )}
             </button>
           ))}
-          <button onClick={onContact} className={`${isHome ? 'btn-force-white bg-black text-white px-6 py-3 ml-2 hover:opacity-90' : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
+          <button onClick={onContact} className={`${isHome ? `${isLight ? 'text-black border-black' : 'text-white border-white'} font-bold py-2 ml-2 border-b hover:opacity-80` : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
             {isHome ? 'Contact Me' : 'Connect'}
           </button>
           {isHome ? (
