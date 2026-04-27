@@ -15,3 +15,4 @@ An engaging thriller that is easy to finish in a few sittings.
 - A twist-driven ending that recontextualizes earlier scenes
 
 Worth reading if you enjoy suspense-heavy character mysteries.
+
