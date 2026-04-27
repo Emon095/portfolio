@@ -198,9 +198,9 @@ const media = parseCollection(mediaFiles);
 export const USER_INFO = {
   name: home.name || 'SM Shahrier Emon',
   role: home.role || 'Researcher',
-  bio: about.bio || '',
+  bio: normalizeMarkdownBody(about.bio || ''),
   location: home.location || '',
-  image: home.image || '',
+  image: resolveContentAssetPath(home.image) || '',
   currentlyBuilding: home.current_building || '',
   github: 'ShahrierEmon',
   twitter: '@ShahrierEmon',
@@ -275,7 +275,7 @@ export const EDUCATION = education.map((doc, index) => {
     institution: item.institution || '',
     degree: item.degree || '',
     duration: item.duration || '',
-    details: item.details || doc.content || '',
+    details: normalizeMarkdownBody(item.details || doc.content || ''),
   };
 });
 
