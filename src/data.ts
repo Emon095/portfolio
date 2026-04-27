@@ -2,6 +2,7 @@ export interface Project {
   id: string;
   title: string;
   description: string;
+  content: string;
   tags: string[];
   link?: string;
   date: string;
@@ -14,6 +15,7 @@ export interface Achievement {
   issuer: string;
   date: string;
   description: string;
+  content: string;
   heroImage?: string;
 }
 
@@ -23,6 +25,17 @@ export interface Certification {
   issuer: string;
   date: string;
   description: string;
+  content: string;
+  heroImage?: string;
+}
+
+export interface Writeup {
+  id: string;
+  title: string;
+  date: string;
+  category: string;
+  excerpt: string;
+  content: string;
   heroImage?: string;
 }
 
@@ -33,10 +46,17 @@ export interface MediaRecord {
   status: 'Completed' | 'Watching' | 'Planned';
   rating?: number;
   date: string;
+  description: string;
+  content: string;
   heroImage?: string;
 }
 
 type MarkdownRecord = Record<string, string>;
+
+interface ParsedMarkdownDoc {
+  fields: MarkdownRecord;
+  content: string;
+}
 
 const toId = (value: string, fallback: string) =>
   (value || fallback)
@@ -49,30 +69,51 @@ const getSortedRawContents = (files: Record<string, string>): string[] =>
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([, content]) => content);
 
-const parseKeyValueDocument = (raw: string): MarkdownRecord => {
-  const result: MarkdownRecord = {};
-  raw
-    .split('\n')
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith('#'))
-    .forEach((line) => {
-      const normalized = line.startsWith('- ') ? line.slice(2).trim() : line;
+const parseMarkdownDocument = (raw: string): ParsedMarkdownDoc => {
+  const fields: MarkdownRecord = {};
+  const lines = raw.split('\n');
+  const bodyLines: string[] = [];
+  let inMeta = true;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+
+    if (inMeta && !trimmed) {
+      inMeta = false;
+      continue;
+    }
+
+    if (inMeta) {
+      const normalized = trimmed.startsWith('- ') ? trimmed.slice(2).trim() : trimmed;
       const idx = normalized.indexOf(':');
-      if (idx === -1) return;
-      const key = normalized.slice(0, idx).trim().toLowerCase();
-      const value = normalized.slice(idx + 1).trim();
-      if (key) result[key] = value;
-    });
-  return result;
+
+      if (idx > 0) {
+        const key = normalized.slice(0, idx).trim();
+        if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(key)) {
+          fields[key.toLowerCase()] = normalized.slice(idx + 1).trim();
+          continue;
+        }
+      }
+
+      inMeta = false;
+    }
+
+    bodyLines.push(line);
+  }
+
+  return {
+    fields,
+    content: bodyLines.join('\n').trim(),
+  };
 };
 
-const parseCollection = (files: Record<string, string>): MarkdownRecord[] =>
+const parseCollection = (files: Record<string, string>): ParsedMarkdownDoc[] =>
   getSortedRawContents(files)
-    .map((raw) => parseKeyValueDocument(raw))
-    .filter((item) => Object.keys(item).length > 0);
+    .map((raw) => parseMarkdownDocument(raw))
+    .filter((doc) => Object.keys(doc.fields).length > 0 || doc.content.length > 0);
 
 const mergeKeyValueCollection = (files: Record<string, string>): MarkdownRecord =>
-  parseCollection(files).reduce<MarkdownRecord>((acc, item) => ({...acc, ...item}), {});
+  parseCollection(files).reduce<MarkdownRecord>((acc, doc) => ({...acc, ...doc.fields}), {});
 
 const homeFiles = import.meta.glob('./content/home/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const aboutFiles = import.meta.glob('./content/about/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
@@ -81,7 +122,7 @@ const achievementFiles = import.meta.glob('./content/achievements/*.md', {eager:
 const projectFiles = import.meta.glob('./content/projects/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const writeupFiles = import.meta.glob('./content/writeups/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 const educationFiles = import.meta.glob('./content/education/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
-const vaultFiles = import.meta.glob('./content/vault/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
+const mediaFiles = import.meta.glob('./content/media/*.md', {eager: true, query: '?raw', import: 'default'}) as Record<string, string>;
 
 const home = mergeKeyValueCollection(homeFiles);
 const about = mergeKeyValueCollection(aboutFiles);
@@ -90,7 +131,7 @@ const achievements = parseCollection(achievementFiles);
 const projects = parseCollection(projectFiles);
 const writeups = parseCollection(writeupFiles);
 const education = parseCollection(educationFiles);
-const vault = parseCollection(vaultFiles);
+const media = parseCollection(mediaFiles);
 
 export const USER_INFO = {
   name: home.name || 'SM Shahrier Emon',
@@ -109,60 +150,84 @@ export const TECH_STACK = (about.tech_stack || '')
   .map((item) => item.trim())
   .filter(Boolean);
 
-export const PROJECTS: Project[] = projects.map((item, index) => ({
-  id: toId(item.title || '', `project-${index + 1}`),
-  title: item.title || 'Untitled Project',
-  description: item.desc || '',
-  tags: (item.tags || '')
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter(Boolean),
-  link: item.link || undefined,
-  date: item.date || '',
-  heroImage: item.hero_image || item.image || undefined,
-}));
+export const PROJECTS: Project[] = projects.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.title || '', `project-${index + 1}`),
+    title: item.title || 'Untitled Project',
+    description: item.desc || '',
+    content: doc.content || item.desc || '',
+    tags: (item.tags || '')
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean),
+    link: item.link || undefined,
+    date: item.date || '',
+    heroImage: item.hero_image || item.image || undefined,
+  };
+});
 
-export const CERTIFICATIONS: Certification[] = certifications.map((item, index) => ({
-  id: toId(item.title || '', `certification-${index + 1}`),
-  title: item.title || 'Untitled Certification',
-  issuer: item.issuer || '',
-  date: item.date || '',
-  description: item.desc || '',
-  heroImage: item.hero_image || item.image || undefined,
-}));
+export const CERTIFICATIONS: Certification[] = certifications.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.title || '', `certification-${index + 1}`),
+    title: item.title || 'Untitled Certification',
+    issuer: item.issuer || '',
+    date: item.date || '',
+    description: item.desc || '',
+    content: doc.content || item.desc || '',
+    heroImage: item.hero_image || item.image || undefined,
+  };
+});
 
-export const ACHIEVEMENTS: Achievement[] = achievements.map((item, index) => ({
-  id: toId(item.title || '', `achievement-${index + 1}`),
-  title: item.title || 'Untitled Achievement',
-  issuer: item.issuer || '',
-  date: item.date || '',
-  description: item.desc || '',
-  heroImage: item.hero_image || item.image || undefined,
-}));
+export const ACHIEVEMENTS: Achievement[] = achievements.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.title || '', `achievement-${index + 1}`),
+    title: item.title || 'Untitled Achievement',
+    issuer: item.issuer || '',
+    date: item.date || '',
+    description: item.desc || '',
+    content: doc.content || item.desc || '',
+    heroImage: item.hero_image || item.image || undefined,
+  };
+});
 
-export const WRITEUPS = writeups.map((item, index) => ({
-  id: toId(item.title || '', `writeup-${index + 1}`),
-  title: item.title || 'Untitled Writeup',
-  date: item.date || '',
-  category: item.category || 'General',
-  excerpt: item.desc || '',
-  heroImage: item.hero_image || item.image || undefined,
-}));
+export const WRITEUPS: Writeup[] = writeups.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.title || '', `writeup-${index + 1}`),
+    title: item.title || 'Untitled Writeup',
+    date: item.date || '',
+    category: item.category || 'General',
+    excerpt: item.desc || '',
+    content: doc.content || item.desc || '',
+    heroImage: item.hero_image || item.image || undefined,
+  };
+});
 
-export const EDUCATION = education.map((item, index) => ({
-  id: toId(item.institution || '', `education-${index + 1}`),
-  institution: item.institution || '',
-  degree: item.degree || '',
-  duration: item.duration || '',
-  details: item.details || '',
-}));
+export const EDUCATION = education.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.institution || '', `education-${index + 1}`),
+    institution: item.institution || '',
+    degree: item.degree || '',
+    duration: item.duration || '',
+    details: item.details || doc.content || '',
+  };
+});
 
-export const MEDIA: MediaRecord[] = vault.map((item, index) => ({
-  id: toId(item.title || '', `media-${index + 1}`),
-  title: item.title || 'Untitled',
-  type: (item.type as MediaRecord['type']) || 'Series',
-  status: (item.status as MediaRecord['status']) || 'Completed',
-  rating: item.rating ? Number(item.rating) : undefined,
-  date: item.date || '',
-  heroImage: item.hero_image || item.image || undefined,
-}));
+export const MEDIA: MediaRecord[] = media.map((doc, index) => {
+  const item = doc.fields;
+  return {
+    id: toId(item.title || '', `media-${index + 1}`),
+    title: item.title || 'Untitled',
+    type: (item.type as MediaRecord['type']) || 'Series',
+    status: (item.status as MediaRecord['status']) || 'Completed',
+    rating: item.rating ? Number(item.rating) : undefined,
+    date: item.date || '',
+    description: item.desc || '',
+    content: doc.content || item.desc || '',
+    heroImage: item.hero_image || item.image || undefined,
+  };
+});

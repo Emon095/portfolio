@@ -11,7 +11,7 @@ Each section now loads **all markdown files** from its folder.
 - `certifications/` -> one certification record per file
 - `achievements/` -> one achievement record per file
 - `projects/` -> one project per file
-- `vault/` -> one vault/media item per file
+- `media/` -> one movie/series review per file
 
 ## File Format
 
@@ -19,5 +19,7 @@ Each section now loads **all markdown files** from its folder.
 - Supported for compatibility: `- KEY: value`
 - Filename can be anything; sorting is alphabetical, so prefixes like `001-`, `002-` control order.
 - For card hero images, use `HERO_IMAGE: https://...` (alias supported: `IMAGE`).
+- For short card description, use `DESC: ...`.
+- Put a blank line after metadata, then write full markdown content below. Clicking a card opens this full content.
 
 Parsed by `src/data.ts` at build/runtime.

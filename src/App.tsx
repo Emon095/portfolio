@@ -30,6 +30,12 @@ const formatDate = (value: unknown): string => {
   return text ? text.replace('-', '.') : 'N/A';
 };
 
+type DetailEntry = {
+  title: string;
+  meta?: string;
+  content: string;
+};
+
 const Scanlines = () => <div className="scanlines" />;
 
 const ModeToggle = ({ mode, setMode }: { mode: 'editorial' | 'terminal', setMode: (m: 'editorial' | 'terminal') => void }) => (
@@ -53,7 +59,7 @@ const ModeToggle = ({ mode, setMode }: { mode: 'editorial' | 'terminal', setMode
 
 // --- Editorial View Components ---
 
-const EditorialView = ({ onContact, activeSection, setActiveSection }: { onContact: () => void, activeSection: string, setActiveSection: (s: string) => void }) => {
+const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection }: { onContact: () => void, onOpenEntry: (entry: DetailEntry) => void, activeSection: string, setActiveSection: (s: string) => void }) => {
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
@@ -188,7 +194,11 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             <div className="column-title">Achievements_Record</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
               {ACHIEVEMENTS.map((ach) => (
-                <div key={ach.id} className="terminal-card group flex flex-col justify-between">
+                <div
+                  key={ach.id}
+                  onClick={() => onOpenEntry({ title: ach.title, meta: `${formatDate(ach.date)} · ${ach.issuer}`, content: safeText(ach.content, ach.description) })}
+                  className="terminal-card group flex flex-col justify-between cursor-pointer"
+                >
                   <div>
                     {ach.heroImage ? (
                       <div className="mb-5 overflow-hidden border border-mono-border/50">
@@ -266,7 +276,11 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             <div className="column-title">Intelligence_Extracts</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
               {WRITEUPS.map((w) => (
-                <div key={w.id} className="terminal-card group cursor-pointer hover:bg-mono-surface border-mono-border/50">
+                <div
+                  key={w.id}
+                  onClick={() => onOpenEntry({ title: w.title, meta: `${w.category} · ${w.date}`, content: safeText(w.content, w.excerpt) })}
+                  className="terminal-card group cursor-pointer hover:bg-mono-surface border-mono-border/50"
+                >
                   {w.heroImage ? (
                     <div className="mb-5 overflow-hidden border border-mono-border/50">
                       <img
@@ -341,10 +355,14 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             animate={{ opacity: 1 }}
             className="py-12"
           >
-            <div className="column-title">Cultural_Archive</div>
+            <div className="column-title">Media_Reviews</div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               {MEDIA.map((item) => (
-                <div key={item.id} className="terminal-card relative aspect-video overflow-hidden group flex flex-col justify-end p-6 border-mono-border/50">
+                <div
+                  key={item.id}
+                  onClick={() => onOpenEntry({ title: item.title, meta: `${item.type} · ${item.date}`, content: safeText(item.content, item.description) })}
+                  className="terminal-card relative aspect-video overflow-hidden group flex flex-col justify-end p-6 border-mono-border/50 cursor-pointer"
+                >
                   {item.heroImage ? (
                     <img
                       src={item.heroImage}
@@ -356,6 +374,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
                   <div className="relative z-10">
                     <div className="text-[9px] uppercase tracking-widest text-mono-muted mb-1">{item.type}</div>
                     <h3 className="text-lg font-display text-white group-hover:text-mono-accent transition-colors mb-1">{item.title}</h3>
+                    <p className="text-[11px] text-mono-muted mb-2 line-clamp-2">{safeText(item.description)}</p>
                     <div className="flex gap-1 text-[11px] text-mono-accent">
                        {'★'.repeat(Math.round((item.rating || 0) / 2)) + '☆'.repeat(Math.max(0, 5 - Math.round((item.rating || 0) / 2)))}
                     </div>
@@ -396,7 +415,7 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             { id: 'achievements', label: 'Achievements' },
             { id: 'certifications', label: 'Certifications' },
             { id: 'projects', label: 'Projects' },
-            { id: 'media', label: 'Vault' },
+            { id: 'media', label: 'Media' },
           ].map((item) => (
             <button 
               key={item.id}
@@ -568,6 +587,7 @@ const App: React.FC = () => {
   }, [mode, activeSection]);
 
   const [showContact, setShowContact] = useState(false);
+  const [selectedEntry, setSelectedEntry] = useState<DetailEntry | null>(null);
 
   return (
     <div className={`relative bg-mono-bg text-gray-400 min-h-screen overflow-x-hidden ${flickering ? 'opacity-70' : 'opacity-100'}`}>
@@ -579,6 +599,7 @@ const App: React.FC = () => {
           <EditorialView 
             key="editorial" 
             onContact={() => setShowContact(true)} 
+            onOpenEntry={setSelectedEntry}
             activeSection={activeSection} 
             setActiveSection={setActiveSection} 
           />
@@ -589,6 +610,32 @@ const App: React.FC = () => {
 
       {/* Contact Modal */}
       <AnimatePresence>
+        {selectedEntry && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 backdrop-blur-xl bg-mono-bg/70">
+            <motion.div
+              initial={{ scale: 0.96, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="terminal-card w-full max-w-4xl max-h-[88vh] overflow-y-auto relative"
+            >
+              <button
+                onClick={() => setSelectedEntry(null)}
+                className="absolute top-4 right-4 text-mono-muted hover:text-mono-accent cursor-pointer"
+              >
+                [X]_CLOSE
+              </button>
+              <div className="pr-20">
+                <h2 className="text-3xl font-display text-white mb-2">{selectedEntry.title}</h2>
+                {selectedEntry.meta ? (
+                  <div className="text-[11px] font-mono uppercase tracking-[2px] text-mono-muted mb-8">{selectedEntry.meta}</div>
+                ) : null}
+              </div>
+              <div className="text-sm text-mono-muted leading-relaxed prose prose-invert max-w-none">
+                <Markdown>{safeText(selectedEntry.content)}</Markdown>
+              </div>
+            </motion.div>
+          </div>
+        )}
         {showContact && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-mono-bg/60">
             <motion.div 
