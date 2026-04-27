@@ -16,7 +16,7 @@ import {
   ChevronRight,
   Monitor
 } from 'lucide-react';
-import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, TECH_STACK_MARKDOWN, EDUCATION, WRITEUPS } from './data';
+import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS } from './data';
 
 // --- Shared Components ---
 const safeText = (value: unknown, fallback = ''): string => {
@@ -155,19 +155,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               <div className="space-y-12 md:mr-6 lg:mr-10 text-left md:text-right">
                 <div>
                   <div className="column-title md:justify-end">Tech_Stack</div>
-                  {TECH_STACK_MARKDOWN ? (
-                    <div className="text-sm text-mono-muted leading-relaxed prose prose-invert max-w-none md:text-right">
-                      <Markdown>{TECH_STACK_MARKDOWN}</Markdown>
-                    </div>
-                  ) : (
-                    <div className="flex flex-wrap gap-2 md:justify-end">
-                      {TECH_STACK.map((tech) => (
-                        <span key={tech} className="inline-block px-3 py-1 border border-mono-border rounded-full text-[10px] text-mono-accent hover:border-white transition-colors">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  <div className="flex flex-wrap gap-2 md:justify-end">
+                    {TECH_STACK.map((tech) => (
+                      <span key={tech} className="inline-block px-3 py-1 border border-mono-border rounded-full text-[10px] text-mono-accent hover:border-white transition-colors">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 <div>
                    <div className="column-title md:justify-end">Current_Node</div>
@@ -185,18 +179,28 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             className="py-12"
           >
             <div className="column-title">Academic_History</div>
-            <div className="space-y-16 mt-8">
-              {EDUCATION.map((edu, i) => (
-                <div key={i} className="max-w-3xl relative pl-12 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-mono-border">
-                  <div className="absolute left-[-4px] top-1.5 w-2 h-2 rounded-full bg-mono-accent" />
-                  <div className="font-mono text-sm text-mono-accent mb-2 uppercase tracking-widest">{edu.duration}</div>
-                  <h3 className="text-3xl font-display text-white mb-2">{edu.institution}</h3>
-                  <p className="text-xl text-mono-muted italic font-display mb-6">{edu.degree}</p>
-                  <div className="text-sm text-mono-muted leading-relaxed max-w-2xl">
-                    <Markdown>{safeText(edu.details)}</Markdown>
-                  </div>
-                </div>
-              ))}
+            <div className="relative mt-10">
+              <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-mono-border/70 -translate-x-1/2" />
+              <div className="space-y-10 md:space-y-14">
+                {EDUCATION.map((edu, i) => {
+                  const isLeft = i % 2 === 0;
+                  return (
+                    <div key={i} className={`relative flex md:block ${isLeft ? 'md:pr-[52%]' : 'md:pl-[52%]'}`}>
+                      <div className={`terminal-card w-full ${isLeft ? 'md:text-right' : 'md:text-left'}`}>
+                        <div className="font-mono text-sm text-mono-accent mb-2 uppercase tracking-widest">{edu.duration}</div>
+                        <h3 className="text-3xl font-display text-white mb-2">{edu.institution}</h3>
+                        <p className="text-xl text-mono-muted italic font-display mb-6">{edu.degree}</p>
+                        <div className="text-sm text-mono-muted leading-relaxed">
+                          <Markdown>{safeText(edu.details)}</Markdown>
+                        </div>
+                      </div>
+                      <div className="hidden md:block absolute left-1/2 top-8 -translate-x-1/2 w-3 h-3 rounded-full bg-mono-accent shadow-[0_0_0_4px_rgba(8,8,8,1)]" />
+                      <div className={`hidden md:block absolute top-8 w-10 h-px bg-mono-border ${isLeft ? 'right-[50%]' : 'left-[50%]'}`} />
+                    </div>
+                  );
+                })}
+                <div className="hidden md:block absolute left-1/2 bottom-0 -translate-x-1/2 w-3 h-3 rounded-full border border-mono-border bg-mono-bg" />
+              </div>
             </div>
           </motion.div>
         );

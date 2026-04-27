@@ -202,14 +202,8 @@ const mediaFiles = import.meta.glob('./content/media/*.md', {eager: true, query:
 
 const home = mergeKeyValueCollection(homeFiles);
 const aboutDocs = parseCollection(aboutFiles);
-const aboutBioDocs = aboutDocs.filter((doc) => (doc.fields.section || 'BIO').toUpperCase() === 'BIO');
-const aboutTechDocs = aboutDocs.filter((doc) => (doc.fields.section || '').toUpperCase() === 'TECH_STACK');
 const about = aboutDocs.reduce<MarkdownRecord>((acc, doc) => ({...acc, ...doc.fields}), {});
-const aboutBioContent = aboutBioDocs
-  .map((doc) => doc.content.trim())
-  .filter(Boolean)
-  .join('\n\n');
-const aboutTechStackMarkdown = aboutTechDocs
+const aboutBioContent = aboutDocs
   .map((doc) => doc.content.trim())
   .filter(Boolean)
   .join('\n\n');
@@ -236,8 +230,6 @@ export const TECH_STACK = (about.tech_stack || '')
   .split(',')
   .map((item) => item.trim())
   .filter(Boolean);
-
-export const TECH_STACK_MARKDOWN = normalizeMarkdownBody(aboutTechStackMarkdown || '');
 
 export const PROJECTS: Project[] = projects.map((doc, index) => {
   const item = doc.fields;
