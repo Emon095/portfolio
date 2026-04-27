@@ -41,7 +41,7 @@ type DetailEntry = {
 const Scanlines = () => <div className="scanlines" />;
 
 const ModeToggle = ({ mode, setMode }: { mode: 'editorial' | 'terminal', setMode: (m: 'editorial' | 'terminal') => void }) => (
-  <div className="fixed top-3 md:top-4 left-20 md:left-28 z-[60] flex items-center gap-2 bg-mono-surface/80 backdrop-blur-md border border-mono-border p-1 rounded-full">
+  <div className="fixed top-3 md:top-12 left-60 md:left-60 z-[60] flex items-center gap-2 bg-mono-surface/80 backdrop-blur-md border border-mono-border p-1 rounded-full">
     <button 
       onClick={() => setMode('editorial')}
       className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'editorial' ? 'bg-mono-accent text-mono-bg' : 'text-mono-muted hover:text-white'}`}
