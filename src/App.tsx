@@ -72,7 +72,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             className="flex-1 flex flex-col md:flex-row items-center justify-between gap-16 py-20"
           >
             {/* Left Section: Hero */}
-            <div className="flex-1 flex flex-col items-center gap-12 md:-ml-8 lg:-ml-12">
+            <div className="flex-1 flex flex-col items-center gap-12 md:-ml-10 lg:-ml-14">
               <div className="relative group -ml-4 md:-ml-8 lg:-ml-12">
                 <div className="absolute -inset-1 bg-mono-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                 <div className="relative w-72 h-84 md:w-[26rem] md:h-[32rem] overflow-hidden rounded-2xl border border-mono-border shadow-2xl">
