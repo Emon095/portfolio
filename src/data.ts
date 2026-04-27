@@ -1,4 +1,10 @@
-import contentRaw from './content.md?raw';
+import aboutRaw from './content/about.md?raw';
+import certificationsRaw from './content/certifications.md?raw';
+import educationRaw from './content/education.md?raw';
+import homeRaw from './content/home.md?raw';
+import projectsRaw from './content/projects.md?raw';
+import vaultRaw from './content/vault.md?raw';
+import writeupsRaw from './content/writeups.md?raw';
 
 export interface Project {
   id: string;
@@ -26,96 +32,117 @@ export interface MediaRecord {
   date: string;
 }
 
-// Simple Parser for content.md
-const parseMarkdown = (raw: string) => {
-  const sections = raw.split('# ').slice(1);
-  const data: any = {};
+type MarkdownRecord = Record<string, string>;
 
-  sections.forEach(section => {
-    const lines = section.trim().split('\n');
-    const title = lines[0].trim();
-    const body = lines.slice(1).join('\n').trim();
+const toId = (value: string, fallback: string) =>
+  (value || fallback)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
-    if (title === 'PROFILE') {
-      data.profile = {};
-      body.split('\n').forEach(line => {
-        const [key, ...val] = line.split(': ');
-        if (key && val) data.profile[key.toLowerCase()] = val.join(': ').trim();
-      });
-    } else if (['ACHIEVEMENTS', 'PROJECTS', 'WRITEUPS', 'MEDIA'].includes(title)) {
-      data[title.toLowerCase()] = body.split('---').map(block => {
-        const item: any = {};
-        block.trim().split('\n').forEach(line => {
-          const match = line.match(/^- ([A-Z_]+): (.*)/);
-          if (match) {
-            item[match[1].toLowerCase()] = match[2].trim();
-          }
-        });
-        // Special handling for tags (comma separated)
-        if (item.tags) item.tags = item.tags.split(',').map((t: string) => t.trim());
-        // Handle rating
-        if (item.rating) item.rating = parseFloat(item.rating);
-        // Add ID if missing
-        item.id = item.title?.toLowerCase().replace(/ /g, '-');
-        return item;
-      }).filter(item => Object.keys(item).length > 0);
-    } else if (title === 'EDUCATION') {
-      data.education = body.split('---').map(block => {
-        const item: any = {};
-        block.trim().split('\n').forEach(line => {
-          const match = line.match(/^- ([A-Z_]+): (.*)/);
-          if (match) item[match[1].toLowerCase()] = match[2].trim();
-        });
-        return item;
-      }).filter(item => Object.keys(item).length > 0);
-    } else if (title === 'TECH_STACK') {
-      data.tech_stack = body.split(',').map(t => t.trim());
-    }
-  });
-
-  return data;
+const parseKeyValueDocument = (raw: string): MarkdownRecord => {
+  const result: MarkdownRecord = {};
+  raw
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith('#'))
+    .forEach((line) => {
+      const idx = line.indexOf(':');
+      if (idx === -1) return;
+      const key = line.slice(0, idx).trim().toLowerCase();
+      const value = line.slice(idx + 1).trim();
+      if (key) result[key] = value;
+    });
+  return result;
 };
 
-const parsed = parseMarkdown(contentRaw);
+const parseListDocument = (raw: string): MarkdownRecord[] =>
+  raw
+    .split('\n---')
+    .map((block) =>
+      block
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .reduce<MarkdownRecord>((acc, line) => {
+          if (!line.startsWith('- ')) return acc;
+          const stripped = line.slice(2);
+          const idx = stripped.indexOf(':');
+          if (idx === -1) return acc;
+          const key = stripped.slice(0, idx).trim().toLowerCase();
+          const value = stripped.slice(idx + 1).trim();
+          if (key) acc[key] = value;
+          return acc;
+        }, {}),
+    )
+    .filter((item) => Object.keys(item).length > 0);
+
+const home = parseKeyValueDocument(homeRaw);
+const about = parseKeyValueDocument(aboutRaw);
+const certifications = parseListDocument(certificationsRaw);
+const projects = parseListDocument(projectsRaw);
+const writeups = parseListDocument(writeupsRaw);
+const education = parseListDocument(educationRaw);
+const vault = parseListDocument(vaultRaw);
 
 export const USER_INFO = {
-  name: parsed.profile?.name || "SM Shahrier Emon",
-  role: parsed.profile?.role || "Researcher",
-  bio: parsed.profile?.bio || "",
-  location: parsed.profile?.location || "",
-  image: parsed.profile?.image || "",
-  currentlyBuilding: parsed.profile?.current_building || "",
-  github: "ShahrierEmon", // Keep static or add to MD
-  twitter: "@ShahrierEmon",
-  email: "shahrier.emon@example.com",
+  name: home.name || 'SM Shahrier Emon',
+  role: home.role || 'Researcher',
+  bio: about.bio || '',
+  location: home.location || '',
+  image: home.image || '',
+  currentlyBuilding: home.current_building || '',
+  github: 'ShahrierEmon',
+  twitter: '@ShahrierEmon',
+  email: 'shahrier.emon@example.com',
 };
 
-export const PROJECTS: Project[] = (parsed.projects || []).map((p: any) => ({
-  ...p,
-  title: p.title || 'Untitled Project',
-  date: p.date || '',
-  tags: Array.isArray(p.tags) ? p.tags : [],
-  description: p.desc || '',
+export const TECH_STACK = (about.tech_stack || '')
+  .split(',')
+  .map((item) => item.trim())
+  .filter(Boolean);
+
+export const PROJECTS: Project[] = projects.map((item, index) => ({
+  id: toId(item.title || '', `project-${index + 1}`),
+  title: item.title || 'Untitled Project',
+  description: item.desc || '',
+  tags: (item.tags || '')
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter(Boolean),
+  link: item.link || undefined,
+  date: item.date || '',
 }));
 
-export const ACHIEVEMENTS: Achievement[] = (parsed.achievements || []).map((a: any) => ({
-  ...a,
-  title: a.title || 'Untitled Achievement',
-  issuer: a.issuer || '',
-  date: a.date || '',
-  description: a.desc || '',
+export const ACHIEVEMENTS: Achievement[] = certifications.map((item, index) => ({
+  id: toId(item.title || '', `certification-${index + 1}`),
+  title: item.title || 'Untitled Achievement',
+  issuer: item.issuer || '',
+  date: item.date || '',
+  description: item.desc || '',
 }));
 
-export const MEDIA: MediaRecord[] = parsed.media || [];
-
-export const EDUCATION = parsed.education || [];
-
-export const WRITEUPS = (parsed.writeups || []).map((w: any) => ({
-  ...w,
-  title: w.title || 'Untitled Writeup',
-  date: w.date || '',
-  category: w.category || 'General',
-  excerpt: w.desc || '',
+export const WRITEUPS = writeups.map((item, index) => ({
+  id: toId(item.title || '', `writeup-${index + 1}`),
+  title: item.title || 'Untitled Writeup',
+  date: item.date || '',
+  category: item.category || 'General',
+  excerpt: item.desc || '',
 }));
 
-export const TECH_STACK = parsed.tech_stack || [];
+export const EDUCATION = education.map((item, index) => ({
+  id: toId(item.institution || '', `education-${index + 1}`),
+  institution: item.institution || '',
+  degree: item.degree || '',
+  duration: item.duration || '',
+  details: item.details || '',
+}));
+
+export const MEDIA: MediaRecord[] = vault.map((item, index) => ({
+  id: toId(item.title || '', `media-${index + 1}`),
+  title: item.title || 'Untitled',
+  type: (item.type as MediaRecord['type']) || 'Series',
+  status: (item.status as MediaRecord['status']) || 'Completed',
+  rating: item.rating ? Number(item.rating) : undefined,
+  date: item.date || '',
+}));

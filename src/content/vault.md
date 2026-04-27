@@ -1,0 +1,17 @@
+- TITLE: Mr. Robot
+- TYPE: Series
+- STATUS: Completed
+- RATING: 10
+- DATE: 2024-01
+---
+- TITLE: Dark
+- TYPE: Series
+- STATUS: Completed
+- RATING: 9.5
+- DATE: 2023-11
+---
+- TITLE: The Silent Patient
+- TYPE: Book
+- STATUS: Completed
+- RATING: 8
+- DATE: 2024-03
