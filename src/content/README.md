@@ -18,5 +18,6 @@ Each section now loads **all markdown files** from its folder.
 - Preferred format for every file: `KEY: value` (one field per line)
 - Supported for compatibility: `- KEY: value`
 - Filename can be anything; sorting is alphabetical, so prefixes like `001-`, `002-` control order.
+- For card hero images, use `HERO_IMAGE: https://...` (alias supported: `IMAGE`).
 
 Parsed by `src/data.ts` at build/runtime.

@@ -5,6 +5,7 @@ export interface Project {
   tags: string[];
   link?: string;
   date: string;
+  heroImage?: string;
 }
 
 export interface Achievement {
@@ -13,6 +14,7 @@ export interface Achievement {
   issuer: string;
   date: string;
   description: string;
+  heroImage?: string;
 }
 
 export interface MediaRecord {
@@ -22,6 +24,7 @@ export interface MediaRecord {
   status: 'Completed' | 'Watching' | 'Planned';
   rating?: number;
   date: string;
+  heroImage?: string;
 }
 
 type MarkdownRecord = Record<string, string>;
@@ -109,6 +112,7 @@ export const PROJECTS: Project[] = projects.map((item, index) => ({
     .filter(Boolean),
   link: item.link || undefined,
   date: item.date || '',
+  heroImage: item.hero_image || item.image || undefined,
 }));
 
 export const ACHIEVEMENTS: Achievement[] = certifications.map((item, index) => ({
@@ -117,6 +121,7 @@ export const ACHIEVEMENTS: Achievement[] = certifications.map((item, index) => (
   issuer: item.issuer || '',
   date: item.date || '',
   description: item.desc || '',
+  heroImage: item.hero_image || item.image || undefined,
 }));
 
 export const WRITEUPS = writeups.map((item, index) => ({
@@ -125,6 +130,7 @@ export const WRITEUPS = writeups.map((item, index) => ({
   date: item.date || '',
   category: item.category || 'General',
   excerpt: item.desc || '',
+  heroImage: item.hero_image || item.image || undefined,
 }));
 
 export const EDUCATION = education.map((item, index) => ({
@@ -142,4 +148,5 @@ export const MEDIA: MediaRecord[] = vault.map((item, index) => ({
   status: (item.status as MediaRecord['status']) || 'Completed',
   rating: item.rating ? Number(item.rating) : undefined,
   date: item.date || '',
+  heroImage: item.hero_image || item.image || undefined,
 }));

@@ -190,6 +190,15 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
               {ACHIEVEMENTS.map((ach) => (
                 <div key={ach.id} className="terminal-card group flex flex-col justify-between">
                   <div>
+                    {ach.heroImage ? (
+                      <div className="mb-5 overflow-hidden border border-mono-border/50">
+                        <img
+                          src={ach.heroImage}
+                          alt={ach.title}
+                          className="w-full h-44 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        />
+                      </div>
+                    ) : null}
                     <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{formatDate(ach.date)}</div>
                     <h4 className="text-2xl font-display text-white group-hover:text-mono-accent transition-colors leading-snug mb-4">{ach.title}</h4>
                     <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {ach.issuer}</div>
@@ -219,6 +228,15 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
               {WRITEUPS.map((w) => (
                 <div key={w.id} className="terminal-card group cursor-pointer hover:bg-mono-surface border-mono-border/50">
+                  {w.heroImage ? (
+                    <div className="mb-5 overflow-hidden border border-mono-border/50">
+                      <img
+                        src={w.heroImage}
+                        alt={w.title}
+                        className="w-full h-40 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                      />
+                    </div>
+                  ) : null}
                   <div className="flex justify-between items-start mb-6">
                     <span className="px-2 py-1 bg-mono-accent/10 text-mono-accent font-mono text-[9px] uppercase tracking-widest border border-mono-accent/20">
                       {w.category}
@@ -248,6 +266,15 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
               {PROJECTS.map((project) => (
                 <div key={project.id} className="terminal-card group hover:scale-[1.01] transition-transform">
+                   {project.heroImage ? (
+                     <div className="mb-5 overflow-hidden border border-mono-border/50">
+                       <img
+                         src={project.heroImage}
+                         alt={project.title}
+                         className="w-full h-40 object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                       />
+                     </div>
+                   ) : null}
                    <div className="flex justify-between items-center mb-4">
                      <span className="font-mono text-xs text-mono-muted">{project.date}</span>
                      <ExternalLink size={16} className="text-mono-muted group-hover:text-mono-accent transition-colors cursor-pointer" />
@@ -279,6 +306,13 @@ const EditorialView = ({ onContact, activeSection, setActiveSection }: { onConta
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               {MEDIA.map((item) => (
                 <div key={item.id} className="terminal-card relative aspect-video overflow-hidden group flex flex-col justify-end p-6 border-mono-border/50">
+                  {item.heroImage ? (
+                    <img
+                      src={item.heroImage}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                    />
+                  ) : null}
                   <div className="absolute inset-0 bg-mono-surface/50 group-hover:bg-mono-surface/20 transition-all duration-700" />
                   <div className="relative z-10">
                     <div className="text-[9px] uppercase tracking-widest text-mono-muted mb-1">{item.type}</div>
