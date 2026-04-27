@@ -60,6 +60,50 @@
   .btn-outline {
     @apply px-8 py-3 border border-mono-border text-mono-accent font-sans text-xs font-semibold uppercase tracking-widest hover:border-white transition-all cursor-pointer;
   }
+
+  .theme-light {
+    --color-mono-bg: #ececed;
+    --color-mono-surface: #f7f7f7;
+    --color-mono-accent: #111111;
+    --color-mono-muted: rgba(17, 17, 17, 0.74);
+    --color-mono-border: rgba(0, 0, 0, 0.24);
+  }
+
+  .theme-dark {
+    --color-mono-bg: #0e0e0e;
+    --color-mono-surface: #171717;
+    --color-mono-accent: #f2f2f2;
+    --color-mono-muted: rgba(255, 255, 255, 0.74);
+    --color-mono-border: rgba(255, 255, 255, 0.2);
+  }
+
+  .theme-light .terminal-card {
+    @apply border-black/15 bg-[#f7f7f7] hover:bg-[#f1f1f1];
+  }
+
+  .theme-light .column-title {
+    @apply text-black/55;
+  }
+
+  .theme-light .btn-outline:hover {
+    border-color: #111111;
+  }
+
+  .theme-dark .terminal-card {
+    @apply border-white/20 bg-[#171717] hover:bg-[#1d1d1d];
+  }
+
+  .theme-dark .column-title {
+    @apply text-white/65;
+  }
+
+  .theme-light .text-white {
+    color: #111111 !important;
+  }
+
+  .theme-light .hover\:text-white:hover {
+    color: #111111 !important;
+  }
 }
 
 /* Custom Scrollbar */

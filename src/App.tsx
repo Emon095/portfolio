@@ -17,7 +17,8 @@ import {
   Trophy,
   ChevronRight,
   Monitor,
-  Moon
+  Moon,
+  Sun
 } from 'lucide-react';
 import { USER_INFO, PROJECTS, ACHIEVEMENTS, CERTIFICATIONS, MEDIA, TECH_STACK, EDUCATION, WRITEUPS, EXPERIENCE } from './data';
 
@@ -43,18 +44,20 @@ type DetailEntry = {
 
 const Scanlines = () => <div className="scanlines" />;
 
-const ModeToggle = ({ mode, setMode }: { mode: 'editorial' | 'terminal', setMode: (m: 'editorial' | 'terminal') => void }) => (
-  <div className="fixed top-4 right-4 md:top-8 md:right-8 z-[60] flex items-center gap-2 bg-mono-surface/80 backdrop-blur-md border border-mono-border p-1 rounded-full">
+type ThemeMode = 'light' | 'dark';
+
+const ModeToggle = ({ mode, setMode, theme }: { mode: 'editorial' | 'terminal', setMode: (m: 'editorial' | 'terminal') => void, theme: ThemeMode }) => (
+  <div className={`fixed top-4 right-4 md:top-8 md:right-8 z-[60] flex items-center gap-2 backdrop-blur-md p-1 rounded-full border ${mode === 'editorial' ? (theme === 'light' ? 'bg-white/85 border-black/20' : 'bg-[#171717]/85 border-white/15') : 'bg-mono-surface/80 border-mono-border'}`}>
     <button 
       onClick={() => setMode('editorial')}
-      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'editorial' ? 'bg-mono-accent text-mono-bg' : 'text-mono-muted hover:text-white'}`}
+      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'editorial' ? (theme === 'light' ? 'bg-black text-white' : 'bg-white text-black') : 'text-mono-muted hover:text-white'}`}
       title="Editorial View"
     >
       <LayoutIcon size={18} />
     </button>
     <button 
       onClick={() => setMode('terminal')}
-      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'terminal' ? 'bg-mono-accent text-mono-bg' : 'text-mono-muted hover:text-white'}`}
+      className={`p-2 rounded-full transition-all cursor-pointer ${mode === 'terminal' ? 'bg-mono-accent text-mono-bg' : mode === 'editorial' ? 'text-black/60 hover:text-black' : 'text-mono-muted hover:text-white'}`}
       title="Terminal View"
     >
       <TerminalIcon size={18} />
@@ -64,7 +67,9 @@ const ModeToggle = ({ mode, setMode }: { mode: 'editorial' | 'terminal', setMode
 
 // --- Editorial View Components ---
 
-const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection }: { onContact: () => void, onOpenEntry: (entry: DetailEntry) => void, activeSection: string, setActiveSection: (s: string) => void }) => {
+const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection, theme, onToggleTheme }: { onContact: () => void, onOpenEntry: (entry: DetailEntry) => void, activeSection: string, setActiveSection: (s: string) => void, theme: ThemeMode, onToggleTheme: () => void }) => {
+  const isHome = true;
+  const isLight = theme === 'light';
   const renderContent = () => {
     switch (activeSection) {
       case 'home':
@@ -72,68 +77,62 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
           <motion.section 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex-1 flex flex-col md:flex-row items-center justify-between gap-16 py-20"
+            className="flex-1 grid grid-cols-1 lg:grid-cols-[1fr_420px] items-center gap-14 lg:gap-8 py-8 md:py-12"
           >
-            {/* Left Section: Hero */}
-            <div className="flex-1 flex flex-col items-start gap-8 md:ml-10 lg:ml-14">
-              <div className="w-full flex flex-col md:flex-row md:items-end gap-8 md:gap-10">
-                <div className="relative group ml-4 md:ml-8 lg:ml-12">
-                  <div className="absolute -inset-1 bg-mono-accent/20 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                  <div className="relative w-72 h-84 md:w-[20rem] md:h-[26rem] overflow-hidden rounded-2xl border border-mono-border shadow-2xl">
-                    <img
-                      src={USER_INFO.image}
-                      alt={USER_INFO.name}
-                      className="w-full h-full object-cover transition-all duration-700"
-                    />
-                    <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-mono-bg via-mono-bg/75 to-transparent pointer-events-none" />
-                  </div>
-                </div>
-                <div className="space-y-4 text-left md:pb-3">
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-normal leading-none tracking-tight text-white italic">
-                    {USER_INFO.name}
-                  </h1>
-                  <p className="max-w-xl text-sm md:text-base text-mono-muted leading-relaxed">
-                    Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals. Founder of RAB (top-ranked CTF team). Campus Ambassador at Hackvisor and Joint Secretary (Cyber Security) at BUP Computer Programming Club. Passionate about reverse engineering and system security.
-                  </p>
-                  <p className="text-sm md:text-base lg:text-lg uppercase tracking-[6px] md:tracking-[7px] text-mono-muted font-sans font-light">
-                    {USER_INFO.role}
-                  </p>
-                </div>
+            <div className="max-w-xl text-left lg:pl-8">
+              <h1 className={`text-5xl md:text-6xl lg:text-7xl font-sans font-semibold tracking-tight ${isLight ? 'text-[#0f0f0f]' : 'text-white'}`}>
+                {USER_INFO.name}
+              </h1>
+              <div className={`mt-7 text-xl md:text-[34px] leading-tight ${isLight ? 'text-[#151515]' : 'text-white/90'}`}>
+                <span className="inline-block mr-3 text-2xl md:text-3xl align-middle">-</span>
+                <span className={`font-semibold px-2 py-1 ${isLight ? 'bg-[#efbbab] text-[#111]' : 'bg-white/15 text-white'}`}>
+                  {USER_INFO.role}
+                </span>
+                <span className={`text-[26px] md:text-[30px] font-normal ml-2 align-middle ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
+                  building practical security systems.
+                </span>
               </div>
-              <div className="flex gap-4 mt-6 md:mt-2">
-                 <button onClick={() => setActiveSection('profile')} className="btn-primary">Explore_Profile</button>
-                 <button onClick={onContact} className="btn-outline">Secure_Channel</button>
+              <p className={`mt-5 max-w-lg text-[28px] leading-relaxed ${isLight ? 'text-[#303030]' : 'text-white/75'}`}>
+                Cybersecurity enthusiast, CTF player, and builder focused on reverse engineering, pwn, and web security.
+              </p>
+              <div className="mt-10 flex items-center gap-4">
+                <button onClick={() => setActiveSection('profile')} className={`px-5 py-4 text-sm font-semibold tracking-wide uppercase cursor-pointer transition-opacity ${isLight ? 'bg-black text-white hover:opacity-90' : 'bg-white text-black hover:opacity-90'}`}>
+                  About Me
+                </button>
+                <button onClick={() => setActiveSection('projects')} className={`px-5 py-4 border text-sm font-semibold tracking-wide uppercase cursor-pointer transition-all ${isLight ? 'border-black text-black hover:bg-black hover:text-white' : 'border-white/70 text-white hover:bg-white hover:text-black'}`}>
+                  Projects
+                </button>
+              </div>
+              <div className={`mt-10 flex items-center gap-4 ${isLight ? 'text-[#444]' : 'text-white/70'}`}>
+                <button onClick={() => setActiveSection('writeups')} className={`w-10 h-10 border flex items-center justify-center text-lg cursor-pointer transition-colors ${isLight ? 'border-black hover:bg-black hover:text-white' : 'border-white/70 hover:bg-white hover:text-black'}`}>
+                  ↓
+                </button>
+                <span className="text-sm">Scroll Down</span>
               </div>
             </div>
 
-            {/* Right Section: Top Achievements Highlights */}
-            <div className="w-full md:w-[380px] md:ml-auto space-y-12 text-left md:text-right">
-              <div>
-                <div className="column-title md:justify-end">Top Achievements</div>
-                <div className="space-y-8 mt-8">
-                  {ACHIEVEMENTS.slice(0, 3).map((ach) => (
-                    <motion.div 
-                      key={ach.id} 
-                      whileHover={{ x: 10 }}
-                      onClick={() => setActiveSection('achievements')}
-                      className="group cursor-pointer border-b border-mono-border/30 pb-6 hover:border-mono-accent transition-all"
-                    >
-                      <div className="font-mono text-[10px] text-mono-muted mb-2 tracking-[2px]">{formatDate(ach.date)}</div>
-                      <h4 className="text-[17px] font-semibold text-white group-hover:text-mono-accent transition-colors leading-snug">
-                        {ach.title}
-                      </h4>
-                      <p className="text-[11px] text-mono-muted mt-3 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 md:justify-end">
-                        View Detailed Record <ChevronRight size={12} />
-                      </p>
-                    </motion.div>
-                  ))}
+            <div className="relative w-full flex justify-center lg:justify-end lg:pr-10">
+              <div className="relative w-[320px] h-[430px] md:w-[360px] md:h-[490px]">
+                <div className={`absolute inset-0 border-4 translate-x-4 translate-y-4 ${isLight ? 'border-black' : 'border-white/90'}`} />
+                <div className="absolute inset-0 overflow-hidden">
+                  <img
+                    src={USER_INFO.image}
+                    alt={USER_INFO.name}
+                    className="w-full h-full object-cover saturate-110"
+                  />
                 </div>
               </div>
-
-              <div className="pt-8 border-t border-mono-border/20">
-                <p className="text-[13px] text-mono-muted italic leading-relaxed">
-                  "Currently focusing on {USER_INFO.currentlyBuilding} to enhance digital provenance."
-                </p>
+              <span className={`absolute left-[calc(50%-16px)] top-[48%] w-4 h-4 rotate-45 ${isLight ? 'bg-[#ef5c2e] border border-black' : 'bg-[#ffc98f] border border-white/80'}`} />
+              <div className="absolute right-[-2.9rem] md:right-[-3.4rem] top-1/2 -translate-y-1/2 flex flex-col gap-3">
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
+                  <Instagram size={16} />
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
+                  <Linkedin size={16} />
+                </a>
+                <a href="https://github.com" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
+                  <Github size={16} />
+                </a>
               </div>
             </div>
           </motion.section>
@@ -526,42 +525,50 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen w-full pb-24 px-4 md:px-8 lg:px-12 xl:px-16 pt-12 flex flex-col"
+      className={`${isLight ? 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]' : 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]'} min-h-screen w-full max-w-[1160px] mx-auto flex flex-col mt-6 md:mt-10 px-6 md:px-12 lg:px-16 pt-8 md:pt-10 pb-10 md:pb-14`}
     >
       {/* Header Section */}
-      <header className="flex flex-col md:flex-row justify-between items-center border-b border-mono-border pb-8 mb-8 gap-8">
-        <div className="name-title">
+      <header className={`flex flex-col md:flex-row justify-between items-center ${isHome ? 'pb-7 mb-4 gap-6' : 'border-b border-mono-border pb-8 mb-8 gap-8'}`}>
+        <div className="name-title flex items-center gap-3">
+          {isHome ? <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold ${isLight ? 'bg-black text-white' : 'bg-white text-black'}`}>{safeText(USER_INFO.name).charAt(0).toUpperCase() || 'U'}</span> : null}
           <button 
             onClick={() => setActiveSection('home')}
-            className="text-2xl md:text-3xl font-display font-normal leading-none tracking-tighter hover:opacity-70 transition-opacity cursor-pointer text-white"
+            className={`${isHome ? (isLight ? 'text-base md:text-lg font-semibold text-[#111]' : 'text-base md:text-lg font-semibold text-white') : 'text-2xl md:text-3xl font-display font-normal text-white'} leading-none tracking-tight hover:opacity-70 transition-opacity cursor-pointer`}
           >
-            kathos <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{safeText(USER_INFO.name).split(' ')[2] || 'USER'}]</span>
+            {isHome ? USER_INFO.name : 'kathos'} {!isHome ? <span className="text-xs font-mono text-mono-muted align-top tracking-widest ml-2">[{safeText(USER_INFO.name).split(' ')[2] || 'USER'}]</span> : null}
           </button>
         </div>
-        <nav className="flex flex-wrap justify-center gap-4 md:gap-8 text-[11px] uppercase tracking-[2px] font-sans">
+        <nav className={`flex flex-wrap justify-center ${isHome ? 'gap-4 md:gap-6 text-sm tracking-wide' : 'gap-4 md:gap-8 text-[11px] uppercase tracking-[2px]'} font-sans`}>
           {[
             { id: 'home', label: 'Home' },
             { id: 'profile', label: 'About' },
+            { id: 'projects', label: 'Projects' },
             { id: 'writeups', label: 'Writeups' },
             { id: 'education', label: 'Education' },
             { id: 'achievements', label: 'Achievements' },
             { id: 'experience', label: 'Experience' },
             { id: 'certifications', label: 'Certifications' },
-            { id: 'projects', label: 'Projects' },
             { id: 'media', label: 'Media' },
           ].map((item) => (
             <button 
               key={item.id}
               onClick={() => setActiveSection(item.id)} 
-              className={`hover:text-white cursor-pointer transition-all relative py-2 ${activeSection === item.id ? 'text-white' : 'text-mono-muted'}`}
+              className={`${isHome ? (isLight ? 'hover:text-black' : 'hover:text-white') : 'hover:text-white'} cursor-pointer transition-all relative py-2 ${activeSection === item.id ? (isHome ? (isLight ? 'text-black' : 'text-white') : 'text-white') : (isHome ? (isLight ? 'text-[#595959]' : 'text-white/60') : 'text-mono-muted')}`}
             >
               {item.label}
               {activeSection === item.id && (
-                <motion.div layoutId="nav-underline" className="absolute bottom-0 left-0 right-0 h-px bg-mono-accent" />
+                <motion.div layoutId="nav-underline" className={`absolute bottom-0 left-0 right-0 h-px ${isHome ? (isLight ? 'bg-black' : 'bg-white') : 'bg-mono-accent'}`} />
               )}
             </button>
           ))}
-          <button onClick={onContact} className="text-mono-accent hover:text-white cursor-pointer transition-colors py-2 border-l border-mono-border pl-6 ml-2">Connect</button>
+          <button onClick={onContact} className={`${isHome ? (isLight ? 'bg-black text-white px-6 py-3 ml-2 hover:opacity-90' : 'bg-white text-black px-6 py-3 ml-2 hover:opacity-90') : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
+            {isHome ? 'Contact Me' : 'Connect'}
+          </button>
+          {isHome ? (
+            <button onClick={onToggleTheme} className={`px-2 cursor-pointer transition-colors ${isLight ? 'text-[#666] hover:text-black' : 'text-white/70 hover:text-white'}`} aria-label="Toggle theme">
+              {isLight ? <Moon size={16} /> : <Sun size={16} />}
+            </button>
+          ) : null}
         </nav>
       </header>
 
@@ -571,23 +578,26 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
       </main>
 
       {/* Footer */}
-      <footer className="mt-20 pt-8 border-t border-mono-border flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] uppercase tracking-[3px] text-mono-muted/50">
-        <div className="flex gap-4 items-center">
-          <span className="w-1 h-1 bg-mono-accent rounded-full animate-pulse" />
-          Node::{USER_INFO.location}
-        </div>
-        <div>System_Ver::2.4.0 // Build_612</div>
-        <div className="flex gap-6">
-          <a href="#" className="hover:text-white transition-colors"><Twitter size={12} /></a>
-          <a href="#" className="hover:text-white transition-colors"><Github size={12} /></a>
-          <a href="#" className="hover:text-white transition-colors"><Mail size={12} /></a>
-        </div>
-      </footer>
+      {!isHome ? (
+        <footer className="mt-20 pt-8 border-t border-mono-border flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] uppercase tracking-[3px] text-mono-muted/50">
+          <div className="flex gap-4 items-center">
+            <span className="w-1 h-1 bg-mono-accent rounded-full animate-pulse" />
+            Node::{USER_INFO.location}
+          </div>
+          <div>System_Ver::2.4.0 // Build_612</div>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-white transition-colors"><Twitter size={12} /></a>
+            <a href="#" className="hover:text-white transition-colors"><Github size={12} /></a>
+            <a href="#" className="hover:text-white transition-colors"><Mail size={12} /></a>
+          </div>
+        </footer>
+      ) : null}
     </motion.div>
   );
 };
 
-const EntryPage = ({ entry, onBack }: { entry: DetailEntry; onBack: () => void }) => {
+const EntryPage = ({ entry, onBack, theme }: { entry: DetailEntry; onBack: () => void, theme: ThemeMode }) => {
+  const isLight = theme === 'light';
   const sectionName = entry.section === 'writeups'
     ? 'Writeups'
     : entry.section === 'achievements'
@@ -601,17 +611,17 @@ const EntryPage = ({ entry, onBack }: { entry: DetailEntry; onBack: () => void }
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
-      className="min-h-screen w-full pb-24 px-4 md:px-8 lg:px-12 xl:px-16 pt-12"
+      className={`${isLight ? 'theme-light bg-[#ececed] text-[#161616] shadow-[0_26px_60px_rgba(0,0,0,0.22)]' : 'theme-dark bg-[#0e0e0e] text-[#ececec] shadow-[0_30px_70px_rgba(0,0,0,0.52)]'} min-h-screen w-full max-w-[1160px] mx-auto mt-6 md:mt-10 pb-16 px-6 md:px-12 lg:px-16 pt-10`}
     >
       <div className="max-w-5xl mx-auto">
         <button
           onClick={onBack}
-          className="text-xs font-mono uppercase tracking-[2px] text-mono-muted hover:text-white transition-colors mb-8 cursor-pointer"
+          className={`text-xs font-mono uppercase tracking-[2px] text-mono-muted transition-colors mb-8 cursor-pointer ${isLight ? 'hover:text-black' : 'hover:text-white'}`}
         >
           [Back_To_{sectionName}]
         </button>
         <div className="border-b border-mono-border pb-6 mb-8">
-          <h1 className="text-4xl md:text-5xl font-display text-white leading-tight">{entry.title}</h1>
+          <h1 className={`text-4xl md:text-5xl font-display leading-tight ${isLight ? 'text-[#121212]' : 'text-white'}`}>{entry.title}</h1>
           {entry.meta ? <p className="mt-3 text-xs uppercase tracking-[2px] text-mono-muted">{entry.meta}</p> : null}
         </div>
         {entry.heroImage ? (
@@ -619,7 +629,7 @@ const EntryPage = ({ entry, onBack }: { entry: DetailEntry; onBack: () => void }
             <img src={entry.heroImage} alt={entry.title} className="w-full max-h-[460px] object-cover" />
           </div>
         ) : null}
-        <article className="terminal-card prose prose-invert max-w-none text-mono-muted">
+        <article className={`terminal-card prose max-w-none text-mono-muted ${isLight ? '' : 'prose-invert'}`}>
           <Markdown>{safeText(entry.content)}</Markdown>
         </article>
       </div>
@@ -753,6 +763,8 @@ const TerminalView = () => {
 const App: React.FC = () => {
   const [mode, setMode] = useState<'editorial' | 'terminal'>('editorial');
   const [activeSection, setActiveSection] = useState('home');
+  const [theme, setTheme] = useState<ThemeMode>('light');
+  const isEditorial = mode === 'editorial';
 
   // Flicker effect on mode change
   const [flickering, setFlickering] = useState(false);
@@ -766,21 +778,23 @@ const App: React.FC = () => {
   const [selectedEntry, setSelectedEntry] = useState<DetailEntry | null>(null);
 
   return (
-    <div className={`relative bg-mono-bg text-gray-400 min-h-screen overflow-x-hidden ${flickering ? 'opacity-70' : 'opacity-100'}`}>
-      <Scanlines />
-      <ModeToggle mode={mode} setMode={setMode} />
+    <div className={`relative min-h-screen overflow-x-hidden ${isEditorial ? (theme === 'light' ? 'bg-[#d8d8d8] text-[#1a1a1a]' : 'bg-[#090909] text-[#ededed]') : 'bg-mono-bg text-gray-400'} ${flickering ? 'opacity-70' : 'opacity-100'}`}>
+      {!isEditorial ? <Scanlines /> : null}
+      <ModeToggle mode={mode} setMode={setMode} theme={theme} />
       
       <AnimatePresence mode="wait">
         {mode === 'editorial' ? (
           selectedEntry ? (
-            <EntryPage key={`entry-${selectedEntry.section}-${selectedEntry.title}`} entry={selectedEntry} onBack={() => setSelectedEntry(null)} />
+            <EntryPage key={`entry-${selectedEntry.section}-${selectedEntry.title}`} entry={selectedEntry} onBack={() => setSelectedEntry(null)} theme={theme} />
           ) : (
             <EditorialView 
               key="editorial" 
               onContact={() => setShowContact(true)} 
               onOpenEntry={setSelectedEntry}
               activeSection={activeSection} 
-              setActiveSection={setActiveSection} 
+              setActiveSection={setActiveSection}
+              theme={theme}
+              onToggleTheme={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}
             />
           )
         ) : (
@@ -791,34 +805,34 @@ const App: React.FC = () => {
       {/* Contact Modal */}
       <AnimatePresence>
         {showContact && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl bg-mono-bg/60">
+          <div className={`fixed inset-0 z-[100] flex items-center justify-center p-6 backdrop-blur-xl ${isEditorial ? (theme === 'light' ? 'bg-black/25' : 'bg-black/55') : 'bg-mono-bg/60'}`}>
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="terminal-card w-full max-w-lg relative"
+              className={`${isEditorial ? (theme === 'light' ? 'theme-light' : 'theme-dark') : ''} terminal-card w-full max-w-lg relative`}
             >
               <button 
                 onClick={() => setShowContact(false)}
-                className="absolute top-4 right-4 text-mono-muted hover:text-mono-accent cursor-pointer"
+                className={`absolute top-4 right-4 ${isEditorial ? (theme === 'light' ? 'text-black/55 hover:text-black' : 'text-white/65 hover:text-white') : 'text-mono-muted hover:text-mono-accent'} cursor-pointer`}
               >
                 [X]_CLOSE
               </button>
-              <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
-                <Mail size={24} className="text-mono-accent" /> Establish_Connection
+              <h2 className={`text-2xl font-bold mb-8 flex items-center gap-2 ${isEditorial ? (theme === 'light' ? 'text-black' : 'text-white') : ''}`}>
+                <Mail size={24} className={`${isEditorial ? (theme === 'light' ? 'text-black' : 'text-white') : 'text-mono-accent'}`} /> Establish_Connection
               </h2>
               <form className="space-y-6">
                 <div>
                   <label className="block font-mono text-xs text-mono-muted uppercase mb-2">Identifier_Name</label>
-                  <input type="text" className="w-full bg-mono-bg border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50" />
+                  <input type="text" className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'light' ? 'bg-white/70' : 'bg-white/5') : 'bg-mono-bg'}`} />
                 </div>
                 <div>
                   <label className="block font-mono text-xs text-mono-muted uppercase mb-2">Protocol_Email</label>
-                  <input type="email" className="w-full bg-mono-bg border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50" />
+                  <input type="email" className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'light' ? 'bg-white/70' : 'bg-white/5') : 'bg-mono-bg'}`} />
                 </div>
                 <div>
                   <label className="block font-mono text-xs text-mono-muted uppercase mb-2">Packet_Payload</label>
-                  <textarea rows={4} className="w-full bg-mono-bg border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50" />
+                  <textarea rows={4} className={`w-full border border-mono-border p-3 font-mono text-mono-accent outline-none focus:border-mono-accent/50 ${isEditorial ? (theme === 'light' ? 'bg-white/70' : 'bg-white/5') : 'bg-mono-bg'}`} />
                 </div>
                 <button className="btn-primary w-full cursor-pointer">
                   SEND_PACKET
@@ -830,8 +844,12 @@ const App: React.FC = () => {
       </AnimatePresence>
 
       {/* Background Decor */}
-      <div className="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-b from-mono-accent/5 to-transparent pointer-events-none" />
-      <div className="fixed bottom-0 right-0 w-64 h-64 bg-mono-accent/5 blur-[120px] rounded-full pointer-events-none" />
+      {!isEditorial ? (
+        <>
+          <div className="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-b from-mono-accent/5 to-transparent pointer-events-none" />
+          <div className="fixed bottom-0 right-0 w-64 h-64 bg-mono-accent/5 blur-[120px] rounded-full pointer-events-none" />
+        </>
+      ) : null}
     </div>
   );
 };
