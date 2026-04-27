@@ -39,7 +39,7 @@ type DetailEntry = {
   meta?: string;
   content: string;
   heroImage?: string;
-  section: 'writeups' | 'achievements' | 'experience' | 'media';
+  section: 'writeups' | 'achievements' | 'experience' | 'certifications' | 'media';
 };
 
 const Scanlines = () => <div className="scanlines" />;
@@ -388,31 +388,35 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
             className="py-12"
           >
             <div className="column-title">Industry_Validation</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
               {CERTIFICATIONS.map((cert) => (
-                <div key={cert.id} className="terminal-card group flex flex-col justify-between">
-                  <div>
-                    {cert.heroImage ? (
-                      <div className="mb-5 overflow-hidden border border-mono-border/50">
-                        <img
-                          src={cert.heroImage}
-                          alt={cert.title}
-                          className="w-full h-44 object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                        />
-                      </div>
-                    ) : null}
-                    <div className="font-mono text-[10px] text-mono-muted mb-4 tracking-[2px]">{formatDate(cert.date)}</div>
-                    <h4 className="text-2xl font-display text-white group-hover:text-mono-accent transition-colors leading-snug mb-4">{cert.title}</h4>
-                    <div className="text-xs text-mono-accent uppercase tracking-widest mb-4">Issued_By: {cert.issuer}</div>
-                    <div className="text-sm text-mono-muted/80 leading-relaxed italic border-l border-mono-border pl-4">
-                      <Markdown>{safeText(cert.description)}</Markdown>
-                    </div>
-                  </div>
-                  <div className="mt-8 pt-6 border-t border-mono-border/30 flex justify-between items-center">
-                    <button className="text-[11px] font-mono text-mono-muted hover:text-white transition-all underline underline-offset-4 uppercase tracking-widest">
-                      Verify_Record
-                    </button>
-                    <ShieldCheck size={16} className="text-mono-border group-hover:text-mono-accent transition-colors" />
+                <div
+                  key={cert.id}
+                  onClick={() => onOpenEntry({
+                    title: cert.title,
+                    meta: `${cert.issuer}${cert.date ? ` · ${formatDate(cert.date)}` : ''}`,
+                    content: safeText(cert.content, cert.description),
+                    heroImage: cert.heroImage,
+                    section: 'certifications',
+                  })}
+                  className="terminal-card relative aspect-video overflow-hidden group flex flex-col justify-end p-6 border-mono-border/50 cursor-pointer"
+                >
+                  {cert.heroImage ? (
+                    <img
+                      src={cert.heroImage}
+                      alt={cert.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                      onError={(event) => {
+                        event.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : null}
+                  <div className="absolute inset-0 bg-mono-surface/55 group-hover:bg-mono-surface/25 transition-all duration-700" />
+                  <div className="relative z-10">
+                    <div className="text-[9px] uppercase tracking-widest text-mono-muted mb-1">{cert.issuer}</div>
+                    <h3 className="text-lg font-display text-white group-hover:text-mono-accent transition-colors mb-1">{cert.title}</h3>
+                    <p className="text-[11px] text-mono-muted mb-2 line-clamp-2">{safeText(cert.description)}</p>
+                    <div className="text-[11px] font-mono text-mono-accent">{formatDate(cert.date)}</div>
                   </div>
                 </div>
               ))}
@@ -638,6 +642,8 @@ const EntryPage = ({ entry, onBack, theme }: { entry: DetailEntry; onBack: () =>
       ? 'Achievements'
       : entry.section === 'experience'
         ? 'Experience'
+        : entry.section === 'certifications'
+          ? 'Certifications'
         : 'Media';
 
   return (
