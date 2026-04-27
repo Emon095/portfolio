@@ -58,6 +58,8 @@ interface ParsedMarkdownDoc {
   content: string;
 }
 
+const ASSET_PREFIX = '/content-assets/';
+
 const normalizeFieldValue = (value: string): string => {
   const trimmed = value.trim();
   if (
@@ -67,6 +69,47 @@ const normalizeFieldValue = (value: string): string => {
     return trimmed.slice(1, -1).trim();
   }
   return trimmed;
+};
+
+const resolveContentAssetPath = (value?: string): string | undefined => {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (!trimmed) return undefined;
+  if (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    trimmed.startsWith('data:') ||
+    trimmed.startsWith('/')
+  ) {
+    return trimmed;
+  }
+  if (trimmed.startsWith('_assets/')) {
+    return `${ASSET_PREFIX}${trimmed.slice('_assets/'.length)}`;
+  }
+  if (trimmed.startsWith('content-assets/')) {
+    return `/${trimmed}`;
+  }
+  return `${ASSET_PREFIX}${trimmed}`;
+};
+
+const normalizeMarkdownBody = (content: string): string => {
+  if (!content) return content;
+
+  // Obsidian embed syntax: ![[image.png]] or ![[folder/image.png|caption]]
+  let normalized = content.replace(/!\[\[([^\]]+)\]\]/g, (_all, targetRaw: string) => {
+    const [target] = targetRaw.split('|');
+    const resolved = resolveContentAssetPath(target.trim()) || target.trim();
+    return `![](${resolved})`;
+  });
+
+  // Standard markdown image syntax with vault-relative attachments.
+  normalized = normalized.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_all, alt: string, targetRaw: string) => {
+    const target = targetRaw.trim().replace(/^["']|["']$/g, '');
+    const resolved = resolveContentAssetPath(target) || target;
+    return `![${alt}](${resolved})`;
+  });
+
+  return normalized;
 };
 
 const toId = (value: string, fallback: string) =>
@@ -167,14 +210,14 @@ export const PROJECTS: Project[] = projects.map((doc, index) => {
     id: toId(item.title || '', `project-${index + 1}`),
     title: item.title || 'Untitled Project',
     description: item.desc || '',
-    content: doc.content || item.desc || '',
+    content: normalizeMarkdownBody(doc.content || item.desc || ''),
     tags: (item.tags || '')
       .split(',')
       .map((tag) => tag.trim())
       .filter(Boolean),
     link: item.link || undefined,
     date: item.date || '',
-    heroImage: item.hero_image || item.image || undefined,
+    heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
 
@@ -186,8 +229,8 @@ export const CERTIFICATIONS: Certification[] = certifications.map((doc, index) =
     issuer: item.issuer || '',
     date: item.date || '',
     description: item.desc || '',
-    content: doc.content || item.desc || '',
-    heroImage: item.hero_image || item.image || undefined,
+    content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
 
@@ -199,8 +242,8 @@ export const ACHIEVEMENTS: Achievement[] = achievements.map((doc, index) => {
     issuer: item.issuer || '',
     date: item.date || '',
     description: item.desc || '',
-    content: doc.content || item.desc || '',
-    heroImage: item.hero_image || item.image || undefined,
+    content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
 
@@ -212,8 +255,8 @@ export const WRITEUPS: Writeup[] = writeups.map((doc, index) => {
     date: item.date || '',
     category: item.category || 'General',
     excerpt: item.desc || '',
-    content: doc.content || item.desc || '',
-    heroImage: item.hero_image || item.image || undefined,
+    content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
 
@@ -238,7 +281,7 @@ export const MEDIA: MediaRecord[] = media.map((doc, index) => {
     rating: item.rating ? Number(item.rating) : undefined,
     date: item.date || '',
     description: item.desc || '',
-    content: doc.content || item.desc || '',
-    heroImage: item.hero_image || item.image || undefined,
+    content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
