@@ -1,6 +1,7 @@
 TITLE: Achievement Title
 ISSUER: Issuer Name
 DATE: YYYY-MM
+CATEGORY: International
 DESC: One-line summary for card preview.
 HERO_IMAGE: _assets/achievement-cover.jpg
 
