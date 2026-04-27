@@ -71,6 +71,14 @@ const normalizeFieldValue = (value: string): string => {
   return trimmed;
 };
 
+const normalizeAssetUrl = (value: string): string => {
+  if (!value) return value;
+  if (value.startsWith('http://') || value.startsWith('https://') || value.startsWith('data:')) {
+    return value;
+  }
+  return encodeURI(value);
+};
+
 const resolveContentAssetPath = (value?: string): string | undefined => {
   if (!value) return undefined;
   const trimmed = value.trim();
@@ -81,15 +89,15 @@ const resolveContentAssetPath = (value?: string): string | undefined => {
     trimmed.startsWith('data:') ||
     trimmed.startsWith('/')
   ) {
-    return trimmed;
+    return normalizeAssetUrl(trimmed);
   }
   if (trimmed.startsWith('_assets/')) {
-    return `${ASSET_PREFIX}${trimmed.slice('_assets/'.length)}`;
+    return normalizeAssetUrl(`${ASSET_PREFIX}${trimmed.slice('_assets/'.length)}`);
   }
   if (trimmed.startsWith('content-assets/')) {
-    return `/${trimmed}`;
+    return normalizeAssetUrl(`/${trimmed}`);
   }
-  return `${ASSET_PREFIX}${trimmed}`;
+  return normalizeAssetUrl(`${ASSET_PREFIX}${trimmed}`);
 };
 
 const normalizeMarkdownBody = (content: string): string => {
