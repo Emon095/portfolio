@@ -120,6 +120,26 @@
   .theme-light .hover\:text-white:hover {
     color: #111111 !important;
   }
+
+  .theme-light [class*="text-white/"] {
+    color: rgba(17, 17, 17, 0.75) !important;
+  }
+
+  .theme-classic .text-white {
+    color: #2f2518 !important;
+  }
+
+  .theme-classic .hover\:text-white:hover {
+    color: #2f2518 !important;
+  }
+
+  .theme-classic [class*="text-white/"] {
+    color: rgba(47, 37, 24, 0.76) !important;
+  }
+
+  .btn-force-white {
+    color: #ffffff !important;
+  }
 }
 
 /* Custom Scrollbar */

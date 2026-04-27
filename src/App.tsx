@@ -94,7 +94,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
                 Cybersecurity enthusiast and CSE student at Bangladesh University of Professionals. Founder of RAB (top-ranked CTF team). Campus Ambassador at Hackvisor and Joint Secretary (Cyber Security) at BUP Computer Programming Club. Passionate about reverse engineering and system security.
               </p>
               <div className="mt-10 flex items-center gap-4">
-                <button onClick={() => setActiveSection('profile')} className={`px-5 py-4 text-sm font-semibold tracking-wide uppercase cursor-pointer transition-opacity ${isLight ? 'bg-black text-white hover:opacity-90' : 'bg-white text-black hover:opacity-90'}`}>
+                <button onClick={() => setActiveSection('profile')} className="btn-force-white px-5 py-4 text-sm font-semibold tracking-wide uppercase cursor-pointer transition-opacity bg-black text-white hover:opacity-90">
                   About Me
                 </button>
                 <button onClick={() => setActiveSection('projects')} className={`px-5 py-4 border text-sm font-semibold tracking-wide uppercase cursor-pointer transition-all ${isLight ? 'border-black text-black hover:bg-black hover:text-white' : 'border-white/70 text-white hover:bg-white hover:text-black'}`}>
@@ -122,13 +122,13 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               </div>
               <span className={`absolute left-[calc(50%-16px)] top-[48%] w-4 h-4 rotate-45 ${isLight ? 'bg-[#ef5c2e] border border-black' : 'bg-[#ffc98f] border border-white/80'}`} />
               <div className="absolute right-[-2.9rem] md:right-[-3.4rem] top-1/2 -translate-y-1/2 flex flex-col gap-3">
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
+                <a href="https://www.instagram.com/shahrier_emon__/" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
                   <Instagram size={16} />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
+                <a href="https://www.linkedin.com/in/shahrier-emon/" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
                   <Linkedin size={16} />
                 </a>
-                <a href="https://github.com" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
+                <a href="https://github.com/Emon095" target="_blank" rel="noreferrer" className={`w-10 h-10 flex items-center justify-center transition-colors ${isLight ? 'bg-[#6d6d6d] text-white hover:bg-black' : 'bg-white/20 text-white hover:bg-white hover:text-black'}`}>
                   <Github size={16} />
                 </a>
               </div>
@@ -559,7 +559,7 @@ const EditorialView = ({ onContact, onOpenEntry, activeSection, setActiveSection
               )}
             </button>
           ))}
-          <button onClick={onContact} className={`${isHome ? (isLight ? 'bg-black text-white px-6 py-3 ml-2 hover:opacity-90' : 'bg-white text-black px-6 py-3 ml-2 hover:opacity-90') : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
+          <button onClick={onContact} className={`${isHome ? 'btn-force-white bg-black text-white px-6 py-3 ml-2 hover:opacity-90' : 'text-mono-accent hover:text-white py-2 border-l border-mono-border pl-6 ml-2'} cursor-pointer transition-colors`}>
             {isHome ? 'Contact Me' : 'Connect'}
           </button>
           {isHome ? (
