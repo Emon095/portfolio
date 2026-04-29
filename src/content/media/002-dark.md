@@ -1,7 +1,7 @@
 TITLE: Dark
 TYPE: Series
 STATUS: Completed
-RATING: 9.5
+RATING: 8
 DATE: 2023-11
 DESC: A dense and rewarding sci-fi mystery with layered timelines and emotionally heavy arcs.
 HERO_IMAGE: https://images.unsplash.com/photo-1478720568477-152d9b164e26?auto=format&fit=crop&w=1200&q=80

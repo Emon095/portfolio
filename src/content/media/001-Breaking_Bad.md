@@ -1,11 +1,10 @@
 TITLE: Breaking Bad  
 TYPE: Series  
 STATUS: Completed  
-RATING: 10.0 ⭐  
+RATING: 10.0 
 DATE: 2024-01  
 DESC: A near-perfect blend of storytelling, character evolution, and tension—widely considered one of the greatest TV series ever made.
 HERO_IMAGE: _assets/Pasted image 20260429230600.png
-
 
 Breaking Bad is my **all-time favorite series—nothing comes close in terms of character writing and storytelling.**
 
