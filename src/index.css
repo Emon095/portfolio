@@ -348,14 +348,14 @@ button {
 .content-section,
 .contact-section,
 footer {
-  width: min(1180px, calc(100% - 48px));
+  width: min(100%, calc(100vw - 24px));
   margin: 0 auto;
 }
 
 .content-section {
   position: relative;
   z-index: 2;
-  padding: 94px 0;
+  padding: 94px clamp(12px, 2vw, 24px);
 }
 
 .section-heading {
