@@ -1292,7 +1292,7 @@ footer {
 @media (max-width: 640px) {
   .hero-section {
     min-height: auto;
-    padding: 84px 20px 0;
+    padding: 84px 20px 14px;
   }
 
   .site-header {
@@ -1346,13 +1346,19 @@ footer {
     padding: 0;
   }
 
+  .hero-content {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
   .content-section {
     width: min(100% - 34px, 1180px);
-    padding: 64px 0;
+    padding: 20px 0 64px;
   }
 
   #achievements {
-    padding-top: 0;
+    padding-top: 8px;
   }
 
   .achievement-grid {
