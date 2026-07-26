@@ -1290,78 +1290,81 @@ footer {
 }
 
 @media (max-width: 640px) {
-  .hero-section {
-    min-height: auto;
-    padding: 66px 16px 0;
+  body {
+    overflow-x: hidden;
+  }
+
+  .portfolio-shell {
+    width: 1440px;
+    transform: scale(calc(100vw / 1440));
+    transform-origin: top left;
   }
 
   .site-header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    padding: 0;
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
+    gap: 28px;
+    top: 18px;
+    left: clamp(18px, 4vw, 54px);
+    right: clamp(18px, 4vw, 54px);
   }
 
   .brand {
-    flex: 1 1 100%;
+    flex: unset;
   }
 
   .nav-links {
-    flex: 1 1 100%;
-    justify-content: flex-start;
-    gap: 18px;
-    overflow-x: auto;
-    padding-bottom: 4px;
+    flex: unset;
+    justify-content: center;
+    gap: clamp(18px, 3vw, 48px);
+    overflow-x: visible;
+    padding-bottom: 0;
   }
 
   .nav-links button {
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .socials {
-    justify-content: flex-start;
+    justify-content: flex-end;
   }
 
   .hero-copy h1 {
-    font-size: clamp(2.15rem, 11vw, 3.2rem);
+    font-size: clamp(3.8rem, 7.8vw, 7.4rem);
   }
 
   .summary {
-    margin: 16px 0 14px;
-    max-width: 34rem;
-    font-size: 0.95rem;
+    margin: 32px 0 22px;
+    max-width: 540px;
+    font-size: clamp(1.05rem, 1.6vw, 1.5rem);
   }
 
   .hero-actions {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    flex-direction: row;
+    gap: 18px;
   }
 
   .portrait-wrap {
-    display: none;
+    display: flex;
   }
 
   .hero-copy {
-    padding: 0;
+    padding: 0 0 64px clamp(10px, 3vw, 40px);
   }
 
   .hero-content {
-    min-height: auto;
-    grid-template-columns: 1fr;
-    gap: 0;
+    min-height: calc(100vh - 74px);
+    grid-template-columns: minmax(0, 0.82fr) minmax(420px, 1.18fr);
   }
 
   .content-section {
-    width: min(100% - 34px, 1180px);
-    padding: 0 0 64px;
+    width: min(1180px, calc(100% - 48px));
+    padding: 94px 0;
   }
 
   #achievements {
-    margin-top: -180px;
+    margin-top: 0;
     padding-top: 0;
   }
 
