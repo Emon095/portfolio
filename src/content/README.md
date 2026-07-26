@@ -1,4 +1,4 @@
-# Portfolio Content (Obsidian-Friendly)
+# Portfolio Content
 
 Each section now loads **all markdown files** from its folder.
 
