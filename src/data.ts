@@ -165,9 +165,17 @@ const parseMarkdownDocument = (raw: string): ParsedMarkdownDoc => {
   const lines = raw.split('\n');
   const bodyLines: string[] = [];
   let inMeta = true;
+  let inFrontmatter = lines[0]?.trim() === '---';
 
-  for (const line of lines) {
+  for (let i = inFrontmatter ? 1 : 0; i < lines.length; i += 1) {
+    const line = lines[i];
     const trimmed = line.trim();
+
+    if (inFrontmatter && trimmed === '---') {
+      inMeta = false;
+      inFrontmatter = false;
+      continue;
+    }
 
     if (inMeta && !trimmed) {
       inMeta = false;
@@ -288,13 +296,13 @@ export const ACHIEVEMENTS: Achievement[] = achievements.map((doc, index) => {
         ? 'Inter University'
         : 'International';
   return {
-    id: toId(item.title || '', `achievement-${index + 1}`),
-    title: item.title || 'Untitled Achievement',
-    issuer: item.issuer || '',
+    id: toId(item.title || item.name || '', `achievement-${index + 1}`),
+    title: item.title || item.name || 'Untitled Achievement',
+    issuer: item.issuer || item.issuedby || '',
     category,
-    date: item.date || '',
-    description: item.desc || '',
-    content: normalizeMarkdownBody(doc.content || item.desc || ''),
+    date: item.date || item.year || '',
+    description: item.desc || item.rank || '',
+    content: normalizeMarkdownBody(doc.content || item.desc || item.rank || ''),
     heroImage: resolveContentAssetPath(item.hero_image || item.image),
   };
 });
