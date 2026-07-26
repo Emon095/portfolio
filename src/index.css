@@ -1291,7 +1291,8 @@ footer {
 
 @media (max-width: 640px) {
   .hero-section {
-    padding: 112px 20px 0;
+    min-height: auto;
+    padding: 112px 20px 12px;
   }
 
   .site-header {
@@ -1343,12 +1344,21 @@ footer {
     left: auto;
     bottom: auto;
     width: 100%;
-    height: 410px;
+    height: 260px;
+    margin-top: 8px;
+  }
+
+  .hero-copy {
+    padding: 0 0 10px;
   }
 
   .content-section {
     width: min(100% - 34px, 1180px);
     padding: 64px 0;
+  }
+
+  #achievements {
+    padding-top: 28px;
   }
 
   .achievement-grid {
