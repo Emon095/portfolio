@@ -1,4 +1,4 @@
-import type {CSSProperties} from 'react';
+import {useState, type CSSProperties} from 'react';
 import Markdown from 'react-markdown';
 import {
   Award,
@@ -11,6 +11,7 @@ import {
   Mail,
   MapPin,
   Download,
+  MoreVertical,
   ShieldCheck,
   Terminal,
 } from 'lucide-react';
@@ -120,6 +121,8 @@ const formatRank = (value: string) => {
 };
 
 function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <main className="portfolio-shell">
       <div className="animated-bg" aria-hidden="true" />
@@ -129,13 +132,13 @@ function App() {
           <span>{USER_INFO.name.replace(firstName, '')}</span>
         </button>
 
-        <nav className="nav-links" aria-label="Primary navigation">
-          <button onClick={() => scrollTo('home')}>Home</button>
-          <button onClick={() => scrollTo('achievements')}>Achievements</button>
-          <button onClick={() => scrollTo('about')}>About</button>
-          <button onClick={() => scrollTo('projects')}>Projects</button>
-          <button onClick={() => scrollTo('experience')}>Experience</button>
-          <button onClick={() => scrollTo('contact')}>Contacts</button>
+        <nav className={`nav-links${menuOpen ? ' is-open' : ''}`} aria-label="Primary navigation">
+          <button onClick={() => { setMenuOpen(false); scrollTo('home'); }}>Home</button>
+          <button onClick={() => { setMenuOpen(false); scrollTo('achievements'); }}>Achievements</button>
+          <button onClick={() => { setMenuOpen(false); scrollTo('about'); }}>About</button>
+          <button onClick={() => { setMenuOpen(false); scrollTo('projects'); }}>Projects</button>
+          <button onClick={() => { setMenuOpen(false); scrollTo('experience'); }}>Experience</button>
+          <button onClick={() => { setMenuOpen(false); scrollTo('contact'); }}>Contacts</button>
         </nav>
 
         <div className="socials">
@@ -145,6 +148,15 @@ function App() {
             </a>
           ))}
         </div>
+        <button
+          className="mobile-menu-button"
+          type="button"
+          aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <MoreVertical size={22} />
+        </button>
       </header>
 
       <section id="home" className="hero-section">
@@ -170,6 +182,7 @@ function App() {
           </div>
 
           <div className="portrait-wrap hero-reveal delay-3" aria-label={`${USER_INFO.name} portrait`}>
+            <span className="portrait-label" aria-hidden="true">Shahrier</span>
             <img src={USER_INFO.image} alt={USER_INFO.name} className="portrait" />
           </div>
         </div>
